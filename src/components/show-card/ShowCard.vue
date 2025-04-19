@@ -28,7 +28,7 @@ const infoDialogOpen = ref(false);
         gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.6)"
         class="d-flex align-end w-100 h-100"
       >
-        <v-btn size="x-large" variant="text" class="d-flex justify-start w-100" @click.stop="infoDialogOpen = true">
+        <v-btn size="large" variant="text" class="d-flex justify-start w-100" @click.stop="infoDialogOpen = true">
           <p class="text-truncate">
             {{ show.title }}
             <v-tooltip activator="parent">
@@ -40,7 +40,7 @@ const infoDialogOpen = ref(false);
         </v-btn>
       </v-img>
       <div class="play-icon d-flex align-center justify-center position-absolute w-100 h-100">
-        <v-icon size="50" class="opacity-50">mdi-play-circle-outline</v-icon>
+        <v-icon size="50" class="opacity-30">mdi-play-circle-outline</v-icon>
       </div>
     </v-btn>
   </v-card>
