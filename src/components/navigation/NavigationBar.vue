@@ -5,7 +5,7 @@ const open = ref(true);
 
 const links = ref([
   {
-    text: "Shows",
+    text: "Movies",
     icon: "mdi-movie-search",
     route: "/shows",
   },
