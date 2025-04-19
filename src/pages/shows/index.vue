@@ -6,9 +6,9 @@ const search = ref<string>("");
 </script>
 
 <template>
-  <v-container class="d-flex flex-column align-center justify-center ga-4">
+  <v-container class="d-flex flex-column align-center justify-center ga-12 pa-12">
     <div class="d-flex flex-column w-100 ga-4">
-      <h1 class="text-h1 text-center">Movies</h1>
+      <h1 class="text-h2 text-center">Movies</h1>
       <search-filter-input
         v-model:search="search"
         :text-field-props="{
@@ -21,8 +21,8 @@ const search = ref<string>("");
         }"
       ></search-filter-input>
     </div>
-    <v-row class="gx-4">
-      <v-col cols="4" v-for="i in 10" :key="i">
+    <v-row>
+      <v-col cols="4" v-for="i in 10" :key="i" class="d-flex align-center justify-center">
         <show-card></show-card>
       </v-col>
     </v-row>

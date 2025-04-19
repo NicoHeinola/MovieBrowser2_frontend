@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import type Show from "@/models/show";
+import ShowInfoDialog from "../show-info-dialog/ShowInfoDialog.vue";
 
 const props = withDefaults(
   defineProps<{
@@ -7,13 +8,15 @@ const props = withDefaults(
   }>(),
   {
     show: () => ({
-      title: "Show Title",
+      title: "Show Title Example Long Text Example",
       image: "https://placehold.co/600x400",
       description:
         "dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release ",
     }),
   }
 );
+
+const infoDialogOpen = ref(false);
 </script>
 
 <template>
@@ -25,8 +28,15 @@ const props = withDefaults(
         gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.6)"
         class="d-flex align-end w-100 h-100"
       >
-        <v-btn size="x-large" variant="text" class="justify-start w-100" @click.stop="console.log('Info')">
-          {{ show.title }}
+        <v-btn size="x-large" variant="text" class="d-flex justify-start w-100" @click.stop="infoDialogOpen = true">
+          <p class="text-truncate">
+            {{ show.title }}
+            <v-tooltip activator="parent">
+              <template #default>
+                <p>{{ show.title }}</p>
+              </template>
+            </v-tooltip>
+          </p>
         </v-btn>
       </v-img>
       <div class="play-icon d-flex align-center justify-center position-absolute w-100 h-100">
@@ -34,6 +44,7 @@ const props = withDefaults(
       </div>
     </v-btn>
   </v-card>
+  <show-info-dialog v-model:open="infoDialogOpen" :show="show"></show-info-dialog>
 </template>
 
 <style scoped lang="scss">
