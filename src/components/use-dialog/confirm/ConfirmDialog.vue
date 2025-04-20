@@ -1,8 +1,14 @@
 <script lang="ts" setup>
-defineProps<{
-  title?: string;
-  text: string;
-}>();
+const props = withDefaults(
+  defineProps<{
+    title?: string;
+    text?: string;
+  }>(),
+  {
+    title: "Are you sure?",
+    text: "This action cannot be undone.",
+  }
+);
 
 const emit = defineEmits<{
   (e: "resolve", payload: boolean): void;

@@ -2,8 +2,6 @@
 import SearchFilterInput from "@/components/search-filter-input/SearchFilterInput.vue";
 import ShowCard from "@/components/show-card/ShowCard.vue";
 import ShowFormDialog from "@/components/show-form-dialog/ShowFormDialog.vue";
-import { useConfirm } from "@/components/use-dialog/confirm/useConfirm";
-import { useSnackbar } from "@/components/use-snackbar/useSnackbar";
 import type Show from "@/models/show";
 import { ShowService } from "@/services/show.service";
 
@@ -38,34 +36,6 @@ const resetShowToAdd = () => {
     description: "",
     imageUrl: "",
   } as Show;
-};
-
-const openSnackbar = useSnackbar();
-const openConfirm = useConfirm();
-
-const openD = async () => {
-  await openSnackbar({
-    props: { text: "Hello World" },
-  });
-};
-
-const openD2 = async () => {
-  const result = await openConfirm({
-    props: {
-      title: "Are you sure?",
-      text: "This action cannot be undone.",
-    },
-  });
-
-  if (result) {
-    await openSnackbar({
-      props: { text: "Confirmed" },
-    });
-  } else {
-    await openSnackbar({
-      props: { text: "Cancelled" },
-    });
-  }
 };
 
 onMounted(async () => {
@@ -110,6 +80,4 @@ onMounted(async () => {
       getShows();
     "
   ></show-form-dialog>
-  <v-btn prepend-icon="mdi-plus" color="primary" @click="openD">1</v-btn>
-  <v-btn prepend-icon="mdi-plus" color="primary" @click="openD2">2</v-btn>
 </template>
