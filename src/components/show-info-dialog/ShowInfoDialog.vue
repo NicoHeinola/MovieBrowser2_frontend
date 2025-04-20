@@ -2,6 +2,9 @@
 import type Show from "@/models/show";
 import ShowFormDialog from "../show-form-dialog/ShowFormDialog.vue";
 import { ShowService } from "@/services/show.service";
+import { useConfirm } from "../use-dialog/confirm/useConfirm";
+import { useSnackbar } from "../use-snackbar/useSnackbar";
+import { errorSnackbarMixin } from "@/utils/errorSnackbar";
 
 const show = defineModel("show", {
   default: {
@@ -22,6 +25,10 @@ const open = defineModel("open", {
 });
 
 const showFormDialogOpen = ref<boolean>(false);
+const openConfirm = useConfirm();
+const openSnackbar = useSnackbar();
+
+const { errorSnackbar } = errorSnackbarMixin.methods;
 
 const openShowFormDialog = () => {
   showFormDialogOpen.value = true;
@@ -36,12 +43,25 @@ const close = () => {
 const deleteShow = async () => {
   if (!show.value.id) return;
 
+  const confirmed = await openConfirm({
+    props: { title: "Delete Show", text: `Are you sure you want to delete the show "${show.value.title}"?` },
+  });
+
+  if (!confirmed) return;
+
   try {
     await ShowService().deleteShow(show.value.id);
+
+    openSnackbar({
+      props: {
+        text: `Show "${show.value.title}" deleted successfully.`,
+      },
+    });
+
     emit("delete:show", show.value);
     close();
   } catch (error) {
-    console.error("Error deleting show:", error);
+    errorSnackbar(error);
   }
 };
 </script>

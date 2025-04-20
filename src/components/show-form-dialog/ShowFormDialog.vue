@@ -2,6 +2,8 @@
 import type Show from "@/models/show";
 import ShowForm from "../show-form/ShowForm.vue";
 import { ShowService } from "@/services/show.service";
+import { useSnackbar } from "../use-snackbar/useSnackbar";
+import { errorSnackbarMixin } from "@/utils/errorSnackbar";
 
 const showModel = defineModel("show", {
   type: Object as () => Show,
@@ -9,6 +11,7 @@ const showModel = defineModel("show", {
 
 const show = ref<Show>({} as Show);
 const showFormRef = ref<InstanceType<typeof ShowForm> | null>(null);
+const openSnackbar = useSnackbar();
 
 const open = defineModel("open", {
   default: false,
@@ -18,6 +21,8 @@ const open = defineModel("open", {
 const close = () => {
   open.value = false;
 };
+
+const { errorSnackbar } = errorSnackbarMixin.methods;
 
 const save = async () => {
   if (!showFormRef.value) return;
@@ -31,11 +36,23 @@ const save = async () => {
   try {
     if (!show.value.id) {
       await ShowService().createShow(show.value);
+
+      openSnackbar({
+        props: {
+          text: `Show "${show.value.title}" created successfully.`,
+        },
+      });
     } else {
       await ShowService().updateShow(show.value.id, show.value);
+
+      openSnackbar({
+        props: {
+          text: `Show "${show.value.title}" updated successfully.`,
+        },
+      });
     }
   } catch (error) {
-    console.error("Error creating show:", error);
+    errorSnackbar(error);
     return;
   }
 

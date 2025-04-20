@@ -16,13 +16,35 @@ import { VDialog } from "vuetify/components";
 export default createVuetify({
   theme: {
     defaultTheme: "dark",
+    themes: {
+      dark: {
+        dark: true,
+        colors: {
+          primary: "#FFD600",
+          secondary: "#1976D2",
+          error: "#FF1744",
+          success: "#00C853",
+        },
+      },
+    },
   },
   defaults: {
     VDialog: {
       width: 800,
+      scrim: "rgba(0,0,0,1)",
     },
     VTooltip: {
       location: "bottom",
+    },
+    VTextarea: {
+      variant: "outlined",
+      color: "secondary",
+      density: "compact",
+    },
+    VTextField: {
+      variant: "outlined",
+      color: "secondary",
+      density: "compact",
     },
   },
 });
