@@ -8,8 +8,8 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    AppFooter: typeof import('./components/AppFooter.vue')['default']
-    HelloWorld: typeof import('./components/HelloWorld.vue')['default']
+    ConfirmDialog: typeof import('./components/use-dialog/confirm/ConfirmDialog.vue')['default']
+    DialogProvider: typeof import('./components/use-dialog/DialogProvider.vue')['default']
     NavigationBar: typeof import('./components/navigation/NavigationBar.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
@@ -18,5 +18,6 @@ declare module 'vue' {
     ShowForm: typeof import('./components/show-form/ShowForm.vue')['default']
     ShowFormDialog: typeof import('./components/show-form-dialog/ShowFormDialog.vue')['default']
     ShowInfoDialog: typeof import('./components/show-info-dialog/ShowInfoDialog.vue')['default']
+    SnackbarProvider: typeof import('./components/use-snackbar/SnackbarProvider.vue')['default']
   }
 }

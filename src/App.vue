@@ -1,9 +1,15 @@
 <script lang="ts" setup>
+import DialogProvider from "./components/use-dialog/DialogProvider.vue";
+import SnackbarProvider from "./components/use-snackbar/SnackbarProvider.vue";
 //
 </script>
 
 <template>
   <v-app>
-    <router-view />
+    <snackbar-provider>
+      <dialog-provider>
+        <router-view />
+      </dialog-provider>
+    </snackbar-provider>
   </v-app>
 </template>
