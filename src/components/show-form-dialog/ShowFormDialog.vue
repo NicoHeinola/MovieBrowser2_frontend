@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import type Show from "@/models/show";
 import ShowForm from "../show-form/ShowForm.vue";
+import { ShowService } from "@/services/show.service";
 
 const showModel = defineModel("show", {
   default: {
@@ -30,6 +31,14 @@ const save = async () => {
   const isValid = response?.valid;
 
   if (!isValid) return;
+
+  // Save show
+  try {
+    await ShowService().createShow(show.value);
+  } catch (error) {
+    console.error("Error creating show:", error);
+    return;
+  }
 
   showModel.value = JSON.parse(JSON.stringify(show.value));
   close();

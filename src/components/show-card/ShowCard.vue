@@ -24,8 +24,8 @@ const infoDialogOpen = ref(false);
         gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.6)"
         class="d-flex align-end w-100 h-100"
       >
-        <v-btn size="large" variant="text" class="d-flex justify-start w-100" @click.stop="infoDialogOpen = true">
-          <p class="text-truncate">
+        <v-btn size="large" variant="text" class="d-flex w-100" @click.stop="infoDialogOpen = true">
+          <p class="text-truncate text-start">
             {{ show.title }}
             <v-tooltip activator="parent">
               <template #default>
@@ -48,6 +48,7 @@ const infoDialogOpen = ref(false);
   :deep(.v-btn__content) {
     width: 100%;
     height: 100%;
+    justify-content: start;
   }
 
   .play-icon {
