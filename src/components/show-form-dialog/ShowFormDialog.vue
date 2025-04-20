@@ -4,11 +4,6 @@ import ShowForm from "../show-form/ShowForm.vue";
 import { ShowService } from "@/services/show.service";
 
 const showModel = defineModel("show", {
-  default: {
-    title: "",
-    description: "",
-    imageUrl: "",
-  } as Show,
   type: Object as () => Show,
 });
 
@@ -34,7 +29,11 @@ const save = async () => {
 
   // Save show
   try {
-    await ShowService().createShow(show.value);
+    if (!show.value.id) {
+      await ShowService().createShow(show.value);
+    } else {
+      await ShowService().updateShow(show.value.id, show.value);
+    }
   } catch (error) {
     console.error("Error creating show:", error);
     return;

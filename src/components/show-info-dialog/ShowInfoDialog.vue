@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import type Show from "@/models/show";
 import ShowFormDialog from "../show-form-dialog/ShowFormDialog.vue";
+import { ShowService } from "@/services/show.service";
 
 const show = defineModel("show", {
   default: {
@@ -10,6 +11,10 @@ const show = defineModel("show", {
   } as Show,
   type: Object as () => Show,
 });
+
+const emit = defineEmits<{
+  (e: "delete:show", show: Show): void;
+}>();
 
 const open = defineModel("open", {
   default: false,
@@ -27,6 +32,18 @@ const close = () => {
   showFormDialogOpen.value = false;
   open.value = false;
 };
+
+const deleteShow = async () => {
+  if (!show.value.id) return;
+
+  try {
+    await ShowService().deleteShow(show.value.id);
+    emit("delete:show", show.value);
+    close();
+  } catch (error) {
+    console.error("Error deleting show:", error);
+  }
+};
 </script>
 
 <template>
@@ -38,6 +55,14 @@ const close = () => {
         </v-card-text>
 
         <v-card-actions>
+          <v-btn
+            prepend-icon="mdi-trash-can"
+            color="error"
+            variant="elevated"
+            text="Delete"
+            @click="deleteShow"
+          ></v-btn>
+          <v-spacer></v-spacer>
           <v-btn prepend-icon="mdi-close" color="error" variant="outlined" text="Close" @click="close"></v-btn>
           <v-btn
             prepend-icon="mdi-pencil"

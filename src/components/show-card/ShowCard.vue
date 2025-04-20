@@ -12,6 +12,10 @@ const show = defineModel("show", {
   type: Object as () => Show,
 });
 
+const emit = defineEmits<{
+  (e: "delete:show", show: Show): void;
+}>();
+
 const infoDialogOpen = ref(false);
 </script>
 
@@ -40,7 +44,11 @@ const infoDialogOpen = ref(false);
       </div>
     </v-btn>
   </v-card>
-  <show-info-dialog v-model:open="infoDialogOpen" v-model:show="show"></show-info-dialog>
+  <show-info-dialog
+    v-model:open="infoDialogOpen"
+    v-model:show="show"
+    @delete:show="(show:Show) => emit('delete:show', show)"
+  ></show-info-dialog>
 </template>
 
 <style scoped lang="scss">

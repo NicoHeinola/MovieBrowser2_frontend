@@ -1,7 +1,7 @@
 import api from "./api";
 
 export const ShowService = () => {
-  const getShows = async (params: any) => {
+  const getShows = async (params?: any) => {
     const response = await api.get("/shows", {
       params: params,
     });
@@ -14,12 +14,12 @@ export const ShowService = () => {
     return response.data;
   };
 
-  const updateShow = async (id: string, data: any) => {
+  const updateShow = async (id: number, data: any) => {
     const response = await api.put(`/shows/${id}`, data);
     return response.data;
   };
 
-  const deleteShow = async (id: string) => {
+  const deleteShow = async (id: number) => {
     const response = await api.delete(`/shows/${id}`);
     return response.data;
   };
