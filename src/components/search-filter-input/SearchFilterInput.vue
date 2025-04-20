@@ -17,7 +17,7 @@ const filtersOpen = defineModel<boolean>("filtersOpen", {
 </script>
 
 <template>
-  <div class="d-flex align-center ga-2">
+  <div class="d-flex align-center ga-2" v-bind="$attrs">
     <v-text-field v-model="search" v-bind="textFieldProps">
       <template #append-inner v-if="searchButtonProps">
         <v-btn v-bind="searchButtonProps"></v-btn>

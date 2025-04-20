@@ -2,19 +2,15 @@
 import type Show from "@/models/show";
 import ShowInfoDialog from "../show-info-dialog/ShowInfoDialog.vue";
 
-const props = withDefaults(
-  defineProps<{
-    show?: Show;
-  }>(),
-  {
-    show: () => ({
-      title: "Show Title Example Long Text Example",
-      image: "https://placehold.co/600x400",
-      description:
-        "dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release ",
-    }),
-  }
-);
+const show = defineModel("show", {
+  default: {
+    title: "Show Title Example Long Text Example",
+    image: "https://placehold.co/600x400",
+    description:
+      "dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release ",
+  } as Show,
+  type: Object as () => Show,
+});
 
 const infoDialogOpen = ref(false);
 </script>
@@ -44,7 +40,7 @@ const infoDialogOpen = ref(false);
       </div>
     </v-btn>
   </v-card>
-  <show-info-dialog v-model:open="infoDialogOpen" :show="show"></show-info-dialog>
+  <show-info-dialog v-model:open="infoDialogOpen" v-model:show="show"></show-info-dialog>
 </template>
 
 <style scoped lang="scss">

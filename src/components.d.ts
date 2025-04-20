@@ -15,6 +15,8 @@ declare module 'vue' {
     RouterView: typeof import('vue-router')['RouterView']
     SearchFilterInput: typeof import('./components/search-filter-input/SearchFilterInput.vue')['default']
     ShowCard: typeof import('./components/show-card/ShowCard.vue')['default']
+    ShowForm: typeof import('./components/show-form/ShowForm.vue')['default']
+    ShowFormDialog: typeof import('./components/show-form-dialog/ShowFormDialog.vue')['default']
     ShowInfoDialog: typeof import('./components/show-info-dialog/ShowInfoDialog.vue')['default']
   }
 }
