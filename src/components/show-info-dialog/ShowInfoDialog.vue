@@ -4,7 +4,7 @@ import ShowFormDialog from "../show-form-dialog/ShowFormDialog.vue";
 import { ShowService } from "@/services/show.service";
 import { useConfirm } from "../use-dialog/confirm/useConfirm";
 import { useSnackbar } from "../use-snackbar/useSnackbar";
-import { errorSnackbarMixin } from "@/utils/errorSnackbar";
+import { useErrorSnackbar } from "@/utils/errorSnackbar";
 
 const show = defineModel("show", {
   default: {
@@ -28,7 +28,7 @@ const showFormDialogOpen = ref<boolean>(false);
 const openConfirm = useConfirm();
 const openSnackbar = useSnackbar();
 
-const { errorSnackbar } = errorSnackbarMixin.methods;
+const { errorSnackbar } = useErrorSnackbar();
 
 const openShowFormDialog = () => {
   showFormDialogOpen.value = true;
@@ -61,7 +61,7 @@ const deleteShow = async () => {
     emit("delete:show", show.value);
     close();
   } catch (error) {
-    errorSnackbar(error);
+    errorSnackbar(error, openSnackbar);
   }
 };
 </script>

@@ -5,7 +5,7 @@ import ShowFormDialog from "@/components/show-form-dialog/ShowFormDialog.vue";
 import { useSnackbar } from "@/components/use-snackbar/useSnackbar";
 import type Show from "@/models/show";
 import { ShowService } from "@/services/show.service";
-import { errorSnackbarMixin } from "@/utils/errorSnackbar";
+import { useErrorSnackbar } from "@/utils/errorSnackbar";
 
 const search = ref<string>("");
 
@@ -14,11 +14,10 @@ const addShowDialogOpen = ref<boolean>(false);
 const shows = ref<Show[]>([]);
 const loadingShows = ref<boolean>(false);
 
-const openSnackbar = useSnackbar();
-
 const showToAdd = ref<Show>({} as Show);
 
-const { errorSnackbar } = errorSnackbarMixin.methods;
+const openSnackbar = useSnackbar();
+const { errorSnackbar } = useErrorSnackbar();
 
 const getShows = async () => {
   loadingShows.value = true;
@@ -27,7 +26,7 @@ const getShows = async () => {
   try {
     data = await ShowService().getShows();
   } catch (error) {
-    errorSnackbar(error);
+    errorSnackbar(error, openSnackbar);
 
     shows.value = [];
     return;

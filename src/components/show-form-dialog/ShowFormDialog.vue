@@ -3,7 +3,7 @@ import type Show from "@/models/show";
 import ShowForm from "../show-form/ShowForm.vue";
 import { ShowService } from "@/services/show.service";
 import { useSnackbar } from "../use-snackbar/useSnackbar";
-import { errorSnackbarMixin } from "@/utils/errorSnackbar";
+import { useErrorSnackbar } from "@/utils/errorSnackbar";
 
 const showModel = defineModel("show", {
   type: Object as () => Show,
@@ -22,7 +22,7 @@ const close = () => {
   open.value = false;
 };
 
-const { errorSnackbar } = errorSnackbarMixin.methods;
+const { errorSnackbar } = useErrorSnackbar();
 
 const save = async () => {
   if (!showFormRef.value) return;
@@ -52,7 +52,7 @@ const save = async () => {
       });
     }
   } catch (error) {
-    errorSnackbar(error);
+    errorSnackbar(error, openSnackbar);
     return;
   }
 
