@@ -24,7 +24,7 @@ const filtersOpen = defineModel<boolean>("filtersOpen", {
   <div class="d-flex align-center ga-2" v-bind="$attrs">
     <v-text-field v-model="search" v-bind="textFieldProps">
       <template #append-inner v-if="searchButtonProps">
-        <v-btn v-bind="searchButtonProps" @click="emit('click:search')"></v-btn>
+        <v-btn v-bind="searchButtonProps" color="secondary" @click="emit('click:search')"></v-btn>
       </template>
     </v-text-field>
     <v-btn

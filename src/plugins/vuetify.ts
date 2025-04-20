@@ -21,7 +21,7 @@ export default createVuetify({
         dark: true,
         colors: {
           primary: "#FFD600",
-          secondary: "#1976D2",
+          secondary: "#a9e5d5",
           error: "#FF1744",
           success: "#00C853",
         },
@@ -29,6 +29,10 @@ export default createVuetify({
     },
   },
   defaults: {
+    VBtn: {
+      variant: "elevated",
+      color: "primary",
+    },
     VDialog: {
       width: 800,
       scrim: "rgba(0,0,0,1)",

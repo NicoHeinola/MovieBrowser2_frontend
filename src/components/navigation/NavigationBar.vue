@@ -14,7 +14,7 @@ const links = ref([
 const selectedLink = computed(() => links.value[0]?.route);
 
 const getLinkColor = (route: string) => {
-  return selectedLink.value === route ? "primary" : "";
+  return selectedLink.value === route ? "secondary" : "";
 };
 </script>
 
