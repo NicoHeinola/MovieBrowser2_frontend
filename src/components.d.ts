@@ -12,6 +12,8 @@ declare module 'vue' {
     ConfirmDialog: typeof import('./components/use-dialog/confirm/ConfirmDialog.vue')['default']
     copy: typeof import('./components/show-form/SeasonFormDialog copy.vue')['default']
     DialogProvider: typeof import('./components/use-dialog/DialogProvider.vue')['default']
+    EpisodeForm: typeof import('./components/show-form/episode/EpisodeForm.vue')['default']
+    EpisodeFormDialog: typeof import('./components/show-form/episode/EpisodeFormDialog.vue')['default']
     EpisodesFormPart: typeof import('./components/show-form/EpisodesFormPart.vue')['default']
     NavigationBar: typeof import('./components/navigation/NavigationBar.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']

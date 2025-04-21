@@ -1,3 +1,5 @@
+import type Episode from "./episode";
+
 export default interface Season {
   id?: number;
   showId?: number;
@@ -6,4 +8,5 @@ export default interface Season {
   title?: string;
   description?: string;
   image?: string;
+  episodes?: Episode[];
 }

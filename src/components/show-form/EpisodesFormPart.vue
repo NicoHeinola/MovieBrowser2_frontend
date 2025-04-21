@@ -1,9 +1,12 @@
 <script lang="ts" setup>
-import type Show from "@/models/show";
 import { rules } from "./show.rules";
 import SeasonFormDialog from "./season/SeasonFormDialog.vue";
-import type Season from "@/models/season";
 import { useConfirm } from "../use-dialog/confirm/useConfirm";
+import EpisodeFormDialog from "./episode/EpisodeFormDialog.vue";
+
+import type Episode from "@/models/episode";
+import type Show from "@/models/show";
+import type Season from "@/models/season";
 
 const props = defineProps<{}>();
 
@@ -18,9 +21,48 @@ const show = defineModel("show", {
 
 const showRules = computed(() => rules(show.value));
 
-const currentSeason = ref<any>(null);
+const currentSeasonNumber = ref<number>();
+const currentSeason = computed<Season | null>({
+  get() {
+    if (!show.value?.seasons) return null;
+
+    const seasonIndex = findSeasonByNumber(currentSeasonNumber.value);
+    return seasonIndex !== -1 ? show.value.seasons[seasonIndex] : null;
+  },
+  set(season: Season | null) {
+    if (season === null || season.number === undefined) return;
+
+    currentSeasonNumber.value = season.number;
+
+    const seasonIndex = findSeasonByNumber(currentSeasonNumber.value);
+    if (seasonIndex !== -1 && show.value?.seasons) {
+      show.value.seasons[seasonIndex] = season;
+    }
+  },
+});
+
 const showSeasonFormDialog = ref<boolean>(false);
 const editedSeason = ref<Season>();
+
+const currentEpisodeNumber = ref<number>();
+const currentEpisode = computed<Episode | null>({
+  get() {
+    if (!currentSeason.value?.episodes) return null;
+
+    const episodeIndex = currentSeason.value.episodes.findIndex(
+      (e: Episode) => e.number === currentEpisodeNumber.value
+    );
+    return episodeIndex !== -1 ? currentSeason.value.episodes[episodeIndex] : null;
+  },
+  set(episode: Episode | null) {
+    if (episode === null || episode.number === undefined) return;
+
+    currentEpisodeNumber.value = episode.number;
+  },
+});
+
+const showEpisodeFormDialog = ref<boolean>(false);
+const editedEpisode = ref<Episode>();
 
 const openConfirm = useConfirm();
 
@@ -30,7 +72,26 @@ const formattedSeasons = computed(() => {
   return show.value.seasons
     .map((season) => ({
       ...season,
-      formattedTitle: season.title || `Season ${season.number}`,
+      formattedTitle: `Season ${season.number} (${season.episodes?.length ?? 0} episodes)`,
+    }))
+    .sort((a: any, b: any) => a.number - b.number);
+});
+
+const formattedEpisodes = computed(() => {
+  if (!show.value?.seasons || !currentSeasonNumber.value) return [];
+
+  const seasonIndex = findSeasonByNumber(currentSeasonNumber.value);
+
+  if (seasonIndex === -1) return [];
+
+  const season = show.value.seasons[seasonIndex];
+
+  if (!season?.episodes) return [];
+
+  return season.episodes
+    .map((episode: Episode) => ({
+      ...episode,
+      formattedTitle: `Episode ${episode.number}`,
     }))
     .sort((a: any, b: any) => a.number - b.number);
 });
@@ -47,14 +108,39 @@ const clearEditedSeason = () => {
   } as Season;
 };
 
+const clearEditedEpisode = () => {
+  const nextNumber = (currentEpisodeNumber.value ?? 0) + 1;
+
+  editedEpisode.value = {
+    title: "",
+    description: "",
+    number: nextNumber,
+  } as Episode;
+};
+
 const openAddSeasonDialog = () => {
   showSeasonFormDialog.value = true;
   clearEditedSeason();
 };
 
+const openAddEpisodeDialog = () => {
+  showEpisodeFormDialog.value = true;
+  clearEditedEpisode();
+};
+
 const openEditSeasonDialog = (season: Season) => {
   showSeasonFormDialog.value = true;
   editedSeason.value = season;
+};
+
+const openEditEpisodeDialog = (episode: Episode) => {
+  showEpisodeFormDialog.value = true;
+  editedEpisode.value = episode;
+};
+
+const findSeasonByNumber = (number?: number): number => {
+  if (!show.value.seasons) return -1;
+  return show.value.seasons.findIndex((s) => s.number === number);
 };
 
 const removeSeason = async (season: Season) => {
@@ -66,9 +152,31 @@ const removeSeason = async (season: Season) => {
 
   if (!show.value.seasons) return;
 
-  const index = show.value.seasons.findIndex((s) => s.number === season.number);
+  const index = findSeasonByNumber(season.number);
   if (index !== -1) {
     show.value.seasons.splice(index, 1);
+  }
+
+  if (currentSeasonNumber.value === season.number) {
+    currentSeasonNumber.value = undefined;
+  }
+};
+
+const removeEpisode = async (episode: Episode) => {
+  const confirmed = await openConfirm({
+    props: { text: `Are you sure you want to delete episode ${episode.number}?` },
+  });
+
+  if (!confirmed) return;
+  if (!currentSeason.value?.episodes) return;
+
+  const index = currentSeason.value.episodes.findIndex((e: Episode) => e.number === episode.number);
+  if (index !== -1) {
+    currentSeason.value.episodes.splice(index, 1);
+  }
+
+  if (currentEpisodeNumber.value === episode.number) {
+    currentEpisodeNumber.value = undefined;
   }
 };
 
@@ -77,7 +185,7 @@ const saveSeason = async (newSeason: Season, oldSeason: Season) => {
     show.value.seasons = [];
   }
 
-  const index = show.value.seasons.findIndex((s) => s.number === oldSeason.number);
+  const index = findSeasonByNumber(oldSeason.number);
 
   if (index !== -1) {
     show.value.seasons[index] = newSeason;
@@ -85,8 +193,37 @@ const saveSeason = async (newSeason: Season, oldSeason: Season) => {
     show.value.seasons.push(newSeason);
   }
 
-  show.value = JSON.parse(JSON.stringify(show.value));
+  currentSeasonNumber.value = newSeason.number;
 };
+
+const saveEpisode = async (newEpisode: Episode, oldEpisode: Episode) => {
+  if (!show.value.seasons) {
+    show.value.seasons = [];
+  }
+
+  if (!currentSeason.value) return;
+
+  if (!currentSeason.value.episodes) {
+    currentSeason.value.episodes = [];
+  }
+
+  const index = currentSeason.value.episodes.findIndex((e: Episode) => e.number === oldEpisode.number);
+
+  if (index !== -1) {
+    currentSeason.value.episodes[index] = newEpisode;
+  } else {
+    currentSeason.value.episodes.push(newEpisode);
+  }
+
+  currentEpisodeNumber.value = newEpisode.number;
+};
+
+watch(
+  () => currentSeasonNumber.value,
+  (newSeasonNumber?: number) => {
+    currentEpisodeNumber.value = undefined;
+  }
+);
 
 onMounted(() => {
   clearEditedSeason();
@@ -96,8 +233,8 @@ onMounted(() => {
 <template>
   <v-select
     label="Season"
-    v-model="currentSeason"
-    item-key="number"
+    v-model="currentSeasonNumber"
+    item-value="number"
     item-title="formattedTitle"
     :items="formattedSeasons"
     clearable
@@ -108,7 +245,9 @@ onMounted(() => {
     </template>
     <template #item="{ item, props: itemProps }">
       <v-list-item v-bind="itemProps">
-        <v-list-item-subtitle v-if="item.raw.title">Season {{ item.raw.number }}</v-list-item-subtitle>
+        <v-list-item-subtitle v-if="item.raw.title">
+          {{ item.raw.title }}
+        </v-list-item-subtitle>
         <template #append>
           <v-btn
             variant="text"
@@ -129,9 +268,38 @@ onMounted(() => {
     </template>
   </v-select>
   <v-slide-x-transition>
-    <v-select label="Episode" v-if="currentSeason">
+    <v-select
+      label="Episode"
+      v-if="currentSeasonNumber"
+      v-model="currentEpisodeNumber"
+      item-value="number"
+      item-title="formattedTitle"
+      :items="formattedEpisodes"
+      clearable
+    >
       <template #append>
-        <v-btn prepend-icon="mdi-plus">Add</v-btn>
+        <v-btn prepend-icon="mdi-plus" @click="openAddEpisodeDialog">Add</v-btn>
+      </template>
+      <template #item="{ item, props: itemProps }">
+        <v-list-item v-bind="itemProps">
+          <v-list-item-subtitle v-if="item.raw.title">{{ item.raw.title }}</v-list-item-subtitle>
+          <template #append>
+            <v-btn
+              variant="text"
+              color="secondary"
+              size="small"
+              icon="mdi-trash-can"
+              @click.stop="removeEpisode(item.raw)"
+            ></v-btn>
+            <v-btn
+              variant="text"
+              color="secondary"
+              size="small"
+              icon="mdi-pencil"
+              @click.stop="openEditEpisodeDialog(item.raw)"
+            ></v-btn>
+          </template>
+        </v-list-item>
       </template>
     </v-select>
   </v-slide-x-transition>
@@ -139,7 +307,18 @@ onMounted(() => {
     v-model:open="showSeasonFormDialog"
     v-model:season="editedSeason"
     @save="saveSeason"
-    :blacklisted-season-numbers="formattedSeasons.map((s) => Number(s.number))"
+    :blacklisted-season-numbers="
+      formattedSeasons.map((s) => Number(s.number)).filter((n) => n !== Number(currentSeasonNumber))
+    "
     v-if="editedSeason"
   ></season-form-dialog>
+  <episode-form-dialog
+    v-model:open="showEpisodeFormDialog"
+    v-model:episode="editedEpisode"
+    @save="saveEpisode"
+    :blacklisted-episode-numbers="
+      formattedEpisodes.map((e) => Number(e.number)).filter((n) => n !== Number(currentEpisodeNumber))
+    "
+    v-if="editedEpisode"
+  ></episode-form-dialog>
 </template>

@@ -1,4 +1,3 @@
-import type Season from "@/models/season";
 import type Show from "@/models/show";
 
 export const rules = (show?: Show) => {
