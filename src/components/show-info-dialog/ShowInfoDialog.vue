@@ -5,6 +5,7 @@ import { ShowService } from "@/services/show.service";
 import { useConfirm } from "../use-dialog/confirm/useConfirm";
 import { useSnackbar } from "../use-snackbar/useSnackbar";
 import { useErrorSnackbar } from "@/utils/errorSnackbar";
+import type Season from "@/models/season";
 
 const show = defineModel("show", {
   default: {
@@ -30,12 +31,31 @@ const openSnackbar = useSnackbar();
 
 const { errorSnackbar } = useErrorSnackbar();
 
+const selectedSeason = ref<Season>();
+const readMoreDescription = ref<boolean>(false);
+
+const maxDescriptionLength = 200;
+const description = computed(() => {
+  if (!show.value.description) return "";
+
+  if (readMoreDescription.value) return show.value.description;
+
+  return show.value.description.length > maxDescriptionLength
+    ? show.value.description.slice(0, maxDescriptionLength) + "..."
+    : show.value.description;
+});
+
 const openShowFormDialog = () => {
   showFormDialogOpen.value = true;
 };
 
 const close = () => {
   showFormDialogOpen.value = false;
+
+  setTimeout(() => {
+    selectedSeason.value = undefined;
+  }, 200);
+
   open.value = false;
 };
 
@@ -69,11 +89,74 @@ const deleteShow = async () => {
   <v-dialog v-model="open">
     <template #default>
       <v-card :title="show.title">
-        <v-card-text>
-          {{ show.description }}
+        <v-card-text class="d-flex flex-column ga-2">
+          <div class="d-flex ga-2">
+            <v-icon>mdi-text</v-icon>
+            <p>
+              <span>{{ description }} </span>
+              <span
+                class="ml-2 text-secondary cursor-pointer"
+                @click="readMoreDescription = !readMoreDescription"
+                v-if="(show.description?.length || 0) > maxDescriptionLength"
+              >
+                {{ readMoreDescription ? "Read less" : "Read more" }}
+              </span>
+            </p>
+          </div>
+
+          <div class="d-flex align-center ga-2">
+            <v-icon>mdi-movie</v-icon>
+            <span>Seasons: {{ show.seasons?.length ?? 0 }}</span>
+          </div>
+
+          <div class="d-flex align-center ga-2">
+            <v-icon>mdi-television-play</v-icon>
+            <span>
+              Episodes: {{ show.seasons?.reduce((acc, season) => acc + (season.episodes?.length ?? 0), 0) ?? 0 }}
+            </span>
+          </div>
+
+          <v-divider :opacity="0.5"></v-divider>
+
+          <b>Watch</b>
+
+          <template v-if="show.seasons?.length">
+            <p>Season</p>
+
+            <div class="d-flex flex-row ga-2 flex-wrap">
+              <v-btn
+                v-for="season in show.seasons"
+                :key="season.id"
+                :variant="selectedSeason?.id !== season.id ? 'outlined' : undefined"
+                @click="selectedSeason = season"
+              >
+                {{ season.title || `Season ${season.number}` }}
+              </v-btn>
+            </div>
+
+            <template v-if="selectedSeason">
+              <div class="d-flex align-center ga-2">
+                <p>Episodes</p>
+                <v-btn variant="text" class="align-center" size="small" append-icon="mdi-play" color="secondary"
+                  >Watch all</v-btn
+                >
+              </div>
+
+              <div class="d-flex flex-row ga-2 flex-wrap">
+                <v-btn v-for="episode in selectedSeason.episodes" :key="episode.id" append-icon="mdi-play">
+                  {{ episode.title || `Episode ${episode.number}` }}
+                </v-btn>
+              </div>
+            </template>
+          </template>
+          <p v-else>No seasons</p>
+
+          <div class="position-absolute w-100 h-100 darkened-overlay-image" v-if="show.image">
+            <v-img :src="show.image" cover alt="Show Image" />
+          </div>
         </v-card-text>
 
-        <v-card-actions>
+        <v-card-actions class="bg-surface">
           <v-btn
             prepend-icon="mdi-trash-can"
             color="error"
@@ -96,3 +179,13 @@ const deleteShow = async () => {
   </v-dialog>
   <show-form-dialog v-model:open="showFormDialogOpen" v-model:show="show" @update:show="close"></show-form-dialog>
 </template>
+
+<style scoped lang="scss">
+.darkened-overlay-image {
+  left: 0;
+  top: 0;
+  filter: brightness(0.35) blur(5px);
+  pointer-events: none;
+  z-index: -1;
+}
+</style>
