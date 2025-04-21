@@ -74,7 +74,7 @@ watch(
 
 <template>
   <v-dialog v-model="open" persistent>
-    <v-card title="Add Show">
+    <v-card :title="show.id ? 'Edit Show' : 'Add Show'">
       <v-card-text>
         <show-form ref="showFormRef" id="show-form" v-model:show="show"></show-form>
       </v-card-text>

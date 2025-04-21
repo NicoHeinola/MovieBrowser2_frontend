@@ -23,7 +23,7 @@ const close = () => {
 };
 
 const save = async () => {
-  const isValid = await settingFormRef.value?.showRef?.validate();
+  const isValid = await settingFormRef.value?.formRef?.validate();
 
   if (!isValid?.valid) return;
 
@@ -64,17 +64,14 @@ watch(
 
 <template>
   <v-dialog v-model="open" max-width="500">
-    <v-card>
-      <v-card-title>
-        <span class="text-h6">{{ setting.id ? "Edit" : "Add" }} Setting</span>
-      </v-card-title>
+    <v-card :title="setting?.id ? 'Edit Setting' : 'Add Setting'">
       <v-card-text>
-        <setting-form ref="settingFormRef" v-model="setting" />
+        <setting-form ref="settingFormRef" v-model:setting="setting" />
       </v-card-text>
       <v-card-actions>
         <v-spacer />
         <v-btn text @click="cancel">Cancel</v-btn>
-        <v-btn color="primary" @click="save">{{ setting.id ? "Update" : "Create" }}</v-btn>
+        <v-btn color="primary" @click="save">{{ setting?.id ? "Update" : "Create" }}</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>

@@ -1,11 +1,8 @@
 <script lang="ts" setup>
 import type Show from "@/models/show";
-import { rules } from "./show.rules";
 import type { VForm } from "vuetify/components";
 import BasicInformationFormPart from "./BasicInformationFormPart.vue";
 import EpisodesFormPart from "./EpisodesFormPart.vue";
-
-const props = defineProps<{}>();
 
 const show = defineModel("show", {
   default: {

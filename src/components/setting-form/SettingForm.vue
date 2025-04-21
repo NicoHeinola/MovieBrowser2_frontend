@@ -1,16 +1,19 @@
 <script lang="ts" setup>
-import { computed } from "vue";
 import type Setting from "@/models/setting";
 import { SettingType } from "@/models/setting";
 import { settingRules } from "./setting.rules";
 import type { VForm } from "vuetify/components";
 
-const props = defineProps<{
-  modelValue: Setting;
-}>();
-const emit = defineEmits(["update:modelValue"]);
+const setting = defineModel("setting", {
+  default: {
+    key: "",
+    value: "",
+    type: SettingType.String,
+  } as Setting,
+  type: Object as () => Setting,
+});
 
-const showRef = ref<InstanceType<typeof VForm> | null>(null);
+const formRef = ref<InstanceType<typeof VForm> | null>(null);
 
 const typeOptions = [
   { title: "String", value: SettingType.String },
@@ -18,18 +21,13 @@ const typeOptions = [
   { title: "Boolean", value: SettingType.Bool },
 ];
 
-const setting = computed({
-  get: () => props.modelValue,
-  set: (val) => emit("update:modelValue", val),
-});
-
 defineExpose({
-  showRef,
+  formRef,
 });
 </script>
 
 <template>
-  <v-form flat ref="showRef">
+  <v-form flat ref="formRef">
     <v-text-field v-model="setting.key" label="Key*" :rules="settingRules.key" required />
     <v-text-field v-model="setting.value" label="Value" :rules="settingRules.value" required />
     <v-select
