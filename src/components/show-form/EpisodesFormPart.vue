@@ -262,14 +262,7 @@ onMounted(() => {
         <template #append>
           <v-btn
             variant="text"
-            color="secondary"
-            size="small"
-            icon="mdi-pencil"
-            @click.stop="openEditSeasonDialog(item.raw)"
-          ></v-btn>
-          <v-btn
-            variant="text"
-            color="secondary"
+            color="error"
             size="small"
             icon="mdi-trash-can"
             @click.stop="removeSeason(item.raw)"

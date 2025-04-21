@@ -23,4 +23,7 @@ export default interface Episode {
   title?: string;
   description?: string;
   type?: EpisodeType;
+  file?: any;
+  files?: any[];
+  filename?: string;
 }

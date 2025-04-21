@@ -55,5 +55,10 @@ export default createVuetify({
       color: "secondary",
       density: "compact",
     },
+    VFileInput: {
+      variant: "outlined",
+      color: "secondary",
+      density: "compact",
+    },
   },
 });

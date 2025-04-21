@@ -1,7 +1,8 @@
 <script lang="ts" setup>
 import type { VForm } from "vuetify/components";
-import { rules } from "./episode.rules";
+import { allowedFileTypes, rules } from "./episode.rules";
 import { EpisodeType, episodeTypeItems } from "@/models/episode"; // import enum
+import type Episode from "@/models/episode";
 
 const props = defineProps<{
   blacklistedEpisodeNumbers: number[];
@@ -14,7 +15,7 @@ const episode = defineModel("episode", {
     number: undefined,
     type: EpisodeType.Episode,
   },
-  type: Object as () => any,
+  type: Object as () => Episode,
 });
 
 const formRef = ref<InstanceType<typeof VForm> | null>(null);
@@ -44,6 +45,17 @@ defineExpose({
         {{ item.raw.title }}
       </template>
     </v-select>
+    <v-file-input
+      label="Video file"
+      v-model="episode.file"
+      :rules="episodeRules.file"
+      chips
+      clearable
+      :accept="Object.values(allowedFileTypes).join(',')"
+      show-size
+      persistent-hint
+      :hint="'Filename: ' + (episode.filename || 'No file has been uploaded')"
+    ></v-file-input>
     <v-textarea label="Description" v-model="episode.description" :rules="episodeRules.description"></v-textarea>
   </v-form>
 </template>
