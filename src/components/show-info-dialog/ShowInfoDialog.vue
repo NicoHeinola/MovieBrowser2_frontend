@@ -6,6 +6,7 @@ import { useConfirm } from "../use-dialog/confirm/useConfirm";
 import { useSnackbar } from "../use-snackbar/useSnackbar";
 import { useErrorSnackbar } from "@/utils/errorSnackbar";
 import type Season from "@/models/season";
+import { EpisodeType, episodeTypeItems } from "@/models/episode";
 
 const show = defineModel("show", {
   default: {
@@ -83,6 +84,11 @@ const deleteShow = async () => {
     errorSnackbar(error, openSnackbar);
   }
 };
+
+// Helper to get icon for episode type
+function getEpisodeTypeIcon(type?: EpisodeType) {
+  return episodeTypeItems.find((item) => item.value === type)?.icon || "";
+}
 </script>
 
 <template>
@@ -118,7 +124,10 @@ const deleteShow = async () => {
 
           <v-divider :opacity="0.5"></v-divider>
 
-          <b>Watch</b>
+          <div class="d-flex align-center ga-2">
+            <b>Watch</b>
+            <v-btn variant="text" size="small" append-icon="mdi-play" color="secondary"> Continue </v-btn>
+          </div>
 
           <template v-if="show.seasons?.length">
             <p>Season</p>
@@ -130,21 +139,24 @@ const deleteShow = async () => {
                 :variant="selectedSeason?.id !== season.id ? 'outlined' : undefined"
                 @click="selectedSeason = season"
               >
-                {{ season.title || `Season ${season.number}` }}
+                {{ season.title ? `${season.title} (Season ${season.number})` : `Season ${season.number}` }}
               </v-btn>
             </div>
 
             <template v-if="selectedSeason">
               <div class="d-flex align-center ga-2">
                 <p>Episodes</p>
-                <v-btn variant="text" class="align-center" size="small" append-icon="mdi-play" color="secondary"
-                  >Watch all</v-btn
-                >
+                <v-btn variant="text" size="small" append-icon="mdi-play" color="secondary"> Watch all </v-btn>
               </div>
 
               <div class="d-flex flex-row ga-2 flex-wrap">
                 <v-btn v-for="episode in selectedSeason.episodes" :key="episode.id" append-icon="mdi-play">
-                  {{ episode.title || `Episode ${episode.number}` }}
+                  <template #prepend>
+                    <v-icon v-if="getEpisodeTypeIcon(episode.type)" class="mr-1">
+                      {{ getEpisodeTypeIcon(episode.type) }}
+                    </v-icon>
+                  </template>
+                  {{ episode.title ? `${episode.title} (Episode ${episode.number})` : `Episode ${episode.number}` }}
                 </v-btn>
               </div>
             </template>
