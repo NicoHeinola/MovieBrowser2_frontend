@@ -32,7 +32,6 @@ const { errorSnackbar } = useErrorSnackbar();
 
 const openShowFormDialog = () => {
   showFormDialogOpen.value = true;
-  show.value = JSON.parse(JSON.stringify(show.value));
 };
 
 const close = () => {
