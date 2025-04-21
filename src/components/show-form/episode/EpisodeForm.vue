@@ -22,6 +22,14 @@ const formRef = ref<InstanceType<typeof VForm> | null>(null);
 
 const episodeRules = computed(() => rules(undefined, props.blacklistedEpisodeNumbers));
 
+const handleFileInput = (files: File[] | File | null) => {
+  if (Array.isArray(files)) {
+    episode.value.file = files.length > 0 ? files[0] : null;
+  } else {
+    episode.value.file = files;
+  }
+};
+
 defineExpose({
   formRef,
 });
@@ -47,7 +55,8 @@ defineExpose({
     </v-select>
     <v-file-input
       label="Video file"
-      v-model="episode.file"
+      :model-value="episode.file"
+      @update:model-value="handleFileInput"
       :rules="episodeRules.file"
       chips
       clearable

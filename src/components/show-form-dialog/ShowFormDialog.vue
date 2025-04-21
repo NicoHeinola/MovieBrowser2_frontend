@@ -24,6 +24,27 @@ const close = () => {
 
 const { errorSnackbar } = useErrorSnackbar();
 
+// Utility to append nested fields to FormData
+const appendFormData = (formData: FormData, data: any, parentKey = "") => {
+  if (data === null || data === undefined) return;
+
+  if (Array.isArray(data)) {
+    data.forEach((value, index) => {
+      appendFormData(formData, value, `${parentKey}[${index}]`);
+    });
+  } else if (data !== null && typeof data === "object" && !(data instanceof File)) {
+    Object.keys(data).forEach((key) => {
+      const value = data[key];
+      const formKey = parentKey ? `${parentKey}.${key}` : key;
+      appendFormData(formData, value, formKey);
+    });
+  } else if (data instanceof File) {
+    formData.append(parentKey, data);
+  } else {
+    formData.append(parentKey, data);
+  }
+};
+
 const save = async () => {
   if (!showFormRef.value) return;
 
@@ -32,19 +53,22 @@ const save = async () => {
 
   if (!isValid) return;
 
-  // Save show
+  // Convert show object to FormData
+  const formData = new FormData();
+  appendFormData(formData, show.value);
+
+  console.log("FormData:", formData); // Debugging line
+
   try {
     if (!show.value.id) {
-      await ShowService().createShow(show.value);
-
+      await ShowService().createShow(formData); // Backend must accept multipart/form-data
       openSnackbar({
         props: {
           text: `Show "${show.value.title}" created successfully.`,
         },
       });
     } else {
-      await ShowService().updateShow(show.value.id, show.value);
-
+      await ShowService().updateShow(show.value.id, formData);
       openSnackbar({
         props: {
           text: `Show "${show.value.title}" updated successfully.`,

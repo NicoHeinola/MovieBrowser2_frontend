@@ -10,12 +10,22 @@ export const ShowService = () => {
   };
 
   const createShow = async (data: any) => {
-    const response = await api.post("/shows", data);
+    const isFormData = data instanceof FormData;
+    const response = await api.post("/shows", data, {
+      headers: {
+        "Content-Type": isFormData ? "multipart/form-data" : "application/json",
+      },
+    });
     return response.data;
   };
 
   const updateShow = async (id: number, data: any) => {
-    const response = await api.put(`/shows/${id}`, data);
+    const isFormData = data instanceof FormData;
+    const response = await api.put(`/shows/${id}`, data, {
+      headers: {
+        "Content-Type": isFormData ? "multipart/form-data" : "application/json",
+      },
+    });
     return response.data;
   };
 

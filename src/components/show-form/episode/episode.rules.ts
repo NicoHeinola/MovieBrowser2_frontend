@@ -12,9 +12,11 @@ export const rules = (episode?: any, blacklistedEpisodeNumbers?: number[]) => {
     (value: any) => {
       if (!value) return true;
 
-      if (!Object.values(allowedFileTypes).includes(value.type)) {
+      // Only check if value is a File object
+      if (value instanceof File && !Object.values(allowedFileTypes).includes(value.type)) {
         return `File type ${value.type} is not allowed`;
       }
+      return true;
     },
   ];
 
