@@ -7,7 +7,7 @@ import EpisodeFormDialog from "./episode/EpisodeFormDialog.vue";
 import type Episode from "@/models/episode";
 import type Show from "@/models/show";
 import type Season from "@/models/season";
-import { EpisodeType } from "@/models/episode";
+import { EpisodeType, episodeTypeItems } from "@/models/episode";
 
 const props = defineProps<{}>();
 
@@ -222,7 +222,7 @@ const saveEpisode = async (newEpisode: Episode, oldEpisode: Episode) => {
 
 watch(
   () => currentSeasonNumber.value,
-  (newSeasonNumber?: number) => {
+  (_?: number) => {
     currentEpisodeNumber.value = undefined;
   }
 );
@@ -282,8 +282,24 @@ onMounted(() => {
       <template #append>
         <v-btn prepend-icon="mdi-plus" @click="openAddEpisodeDialog">Add</v-btn>
       </template>
+      <template #selection="{ item }">
+        <v-icon
+          size="15"
+          :icon="episodeTypeItems.find((type: any) => type.value === item.raw.type)?.icon"
+          class="me-2"
+        ></v-icon>
+        {{ item.raw.formattedTitle }}
+      </template>
       <template #item="{ item, props: itemProps }">
-        <v-list-item v-bind="itemProps">
+        <v-list-item v-bind="itemProps" title="">
+          <v-list-item-title>
+            <v-icon
+              size="15"
+              :icon="episodeTypeItems.find((type: any) => type.value === item.raw.type)?.icon"
+              class="me-2"
+            ></v-icon>
+            {{ item.raw.formattedTitle }}
+          </v-list-item-title>
           <v-list-item-subtitle v-if="item.raw.title">{{ item.raw.title }}</v-list-item-subtitle>
           <template #append>
             <v-btn

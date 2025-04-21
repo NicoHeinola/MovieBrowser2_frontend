@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import type { VForm } from "vuetify/components";
 import { rules } from "./episode.rules";
-import { EpisodeType } from "@/models/episode"; // import enum
+import { EpisodeType, episodeTypeItems } from "@/models/episode"; // import enum
 
 const props = defineProps<{
   blacklistedEpisodeNumbers: number[];
@@ -20,15 +20,6 @@ const episode = defineModel("episode", {
 const formRef = ref<InstanceType<typeof VForm> | null>(null);
 
 const episodeRules = computed(() => rules(undefined, props.blacklistedEpisodeNumbers));
-
-const episodeTypeItems = [
-  { title: "Episode", value: EpisodeType.Episode, icon: "mdi-television-play" },
-  { title: "Movie", value: EpisodeType.Movie, icon: "mdi-movie-open" },
-  { title: "OVA", value: EpisodeType.OVA, icon: "mdi-disc" },
-  { title: "Special", value: EpisodeType.Special, icon: "mdi-star" },
-  { title: "ONA", value: EpisodeType.ONA, icon: "mdi-web" },
-  { title: "Music", value: EpisodeType.Music, icon: "mdi-music" },
-];
 
 defineExpose({
   formRef,
