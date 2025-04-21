@@ -96,7 +96,7 @@ function getEpisodeTypeIcon(type?: EpisodeType) {
     <template #default>
       <v-card :title="show.title">
         <v-card-text class="d-flex flex-column ga-2">
-          <div class="d-flex ga-2">
+          <div class="d-flex ga-2" v-if="show.description">
             <v-icon>mdi-text</v-icon>
             <p>
               <span>{{ description }} </span>
