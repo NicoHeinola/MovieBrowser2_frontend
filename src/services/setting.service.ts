@@ -21,5 +21,10 @@ export const SettingService = () => {
     return response.data;
   };
 
-  return { getSettings, createSetting, updateSetting, deleteSetting };
+  const seedSettings = async () => {
+    const response = await api.post("/settings/seed", {});
+    return response.data;
+  };
+
+  return { getSettings, createSetting, updateSetting, deleteSetting, seedSettings };
 };

@@ -62,6 +62,25 @@ const resetNewSetting = () => {
   newSetting.value = { key: "", value: "", type: SettingType.String };
 };
 
+const seedSettings = async () => {
+  const ok = await openConfirm({
+    props: {
+      title: "Seed Settings",
+      text: "Are you sure you want to seed settings? This will overwrite existing settings.",
+    },
+  });
+
+  if (!ok) return;
+
+  try {
+    await SettingService().seedSettings();
+    openSnackbar({ props: { text: "Settings seeded" } });
+    await getSettings();
+  } catch (error) {
+    errorSnackbar(error, openSnackbar);
+  }
+};
+
 onMounted(getSettings);
 
 watch(dialogOpen, (val) => {
@@ -72,7 +91,10 @@ watch(dialogOpen, (val) => {
 <template>
   <v-container class="pa-8">
     <h1 class="text-h4 mb-6">Settings</h1>
-    <v-btn color="primary" prepend-icon="mdi-plus" @click="dialogOpen = true">Add Setting</v-btn>
+    <div class="d-flex ga-2">
+      <v-btn color="primary" prepend-icon="mdi-plus" @click="dialogOpen = true">Add Setting</v-btn>
+      <v-btn color="error" prepend-icon="mdi-seed" @click="seedSettings">Seed Settings</v-btn>
+    </div>
     <v-table class="mt-6" :loading="loading">
       <thead>
         <tr>
