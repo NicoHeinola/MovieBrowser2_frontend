@@ -21,6 +21,8 @@ declare module 'vue' {
     SearchFilterInput: typeof import('./components/search-filter-input/SearchFilterInput.vue')['default']
     SeasonForm: typeof import('./components/show-form/season/SeasonForm.vue')['default']
     SeasonFormDialog: typeof import('./components/show-form/season/SeasonFormDialog.vue')['default']
+    SettingForm: typeof import('./components/setting-form/SettingForm.vue')['default']
+    SettingFormDialog: typeof import('./components/setting-form-dialog/SettingFormDialog.vue')['default']
     ShowCard: typeof import('./components/show-card/ShowCard.vue')['default']
     ShowForm: typeof import('./components/show-form/ShowForm.vue')['default']
     ShowFormDialog: typeof import('./components/show-form-dialog/ShowFormDialog.vue')['default']

@@ -9,9 +9,16 @@ const links = ref([
     icon: "mdi-movie-search",
     route: "/shows",
   },
+  {
+    text: "Settings",
+    icon: "mdi-cog",
+    route: "/settings",
+  },
 ]);
 
-const selectedLink = computed(() => links.value[0]?.route);
+const route = useRoute();
+
+const selectedLink = computed(() => route.path);
 
 const getLinkColor = (route: string) => {
   return selectedLink.value === route ? "secondary" : "";

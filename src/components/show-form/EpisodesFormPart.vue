@@ -255,15 +255,15 @@ onMounted(() => {
             variant="text"
             color="secondary"
             size="small"
-            icon="mdi-trash-can"
-            @click.stop="removeSeason(item.raw)"
+            icon="mdi-pencil"
+            @click.stop="openEditSeasonDialog(item.raw)"
           ></v-btn>
           <v-btn
             variant="text"
             color="secondary"
             size="small"
-            icon="mdi-pencil"
-            @click.stop="openEditSeasonDialog(item.raw)"
+            icon="mdi-trash-can"
+            @click.stop="removeSeason(item.raw)"
           ></v-btn>
         </template>
       </v-list-item>
@@ -306,15 +306,15 @@ onMounted(() => {
               variant="text"
               color="secondary"
               size="small"
-              icon="mdi-trash-can"
-              @click.stop="removeEpisode(item.raw)"
+              icon="mdi-pencil"
+              @click.stop="openEditEpisodeDialog(item.raw)"
             ></v-btn>
             <v-btn
               variant="text"
               color="secondary"
               size="small"
-              icon="mdi-pencil"
-              @click.stop="openEditEpisodeDialog(item.raw)"
+              icon="mdi-trash-can"
+              @click.stop="removeEpisode(item.raw)"
             ></v-btn>
           </template>
         </v-list-item>
