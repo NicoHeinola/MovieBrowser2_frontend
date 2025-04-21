@@ -7,6 +7,7 @@ import EpisodeFormDialog from "./episode/EpisodeFormDialog.vue";
 import type Episode from "@/models/episode";
 import type Show from "@/models/show";
 import type Season from "@/models/season";
+import { EpisodeType } from "@/models/episode";
 
 const props = defineProps<{}>();
 
@@ -114,6 +115,7 @@ const clearEditedEpisode = () => {
   editedEpisode.value = {
     title: "",
     description: "",
+    type: EpisodeType.Episode,
     number: nextNumber,
   } as Episode;
 };
