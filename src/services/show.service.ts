@@ -34,5 +34,16 @@ export const ShowService = () => {
     return response.data;
   };
 
-  return { getShows, createShow, updateShow, deleteShow };
+  const uploadEpisodeFile = async (showId: number, episodeId: number, file: File) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    const response = await api.post(`/shows/${showId}/episodes/${episodeId}/file`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response.data;
+  };
+
+  return { getShows, createShow, updateShow, deleteShow, uploadEpisodeFile };
 };

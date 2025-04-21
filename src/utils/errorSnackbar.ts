@@ -32,6 +32,20 @@ export const useErrorSnackbar = () => {
           color: "error",
         },
       });
+    } else if (status === 422) {
+      openSnackbar({
+        props: {
+          text: "Unprocessable entity.",
+          color: "error",
+        },
+      });
+    } else {
+      openSnackbar({
+        props: {
+          text: "An unexpected error occurred.",
+          color: "error",
+        },
+      });
     }
 
     console.error(error);
