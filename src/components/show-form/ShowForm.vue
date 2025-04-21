@@ -1,7 +1,9 @@
 <script lang="ts" setup>
 import type Show from "@/models/show";
-import { rules } from "./rules";
+import { rules } from "./show.rules";
 import type { VForm } from "vuetify/components";
+import BasicInformationFormPart from "./BasicInformationFormPart.vue";
+import EpisodesFormPart from "./EpisodesFormPart.vue";
 
 const props = defineProps<{}>();
 
@@ -9,19 +11,14 @@ const show = defineModel("show", {
   default: {
     title: "",
     description: "",
-    imageUrl: "",
+    image: "",
   } as Show,
   type: Object as () => Show,
 });
 
 const formRef = ref<InstanceType<typeof VForm> | null>(null);
-const showRules = rules();
 
-const imageSearchUrl = computed(() => {
-  const title = `high resolution Cover image for ${show.value.title} show`;
-
-  return `https://www.google.com/search?tbm=isch&q=${encodeURIComponent(title)}`;
-});
+const formParts = ref<Array<string>>(["Basic information", "Episodes"]);
 
 defineExpose({
   formRef,
@@ -29,22 +26,21 @@ defineExpose({
 </script>
 
 <template>
-  <v-form ref="formRef">
-    <v-text-field label="Title*" v-model="show.title" :rules="showRules.title"></v-text-field>
-    <v-textarea label="Description" v-model="show.description" :rules="showRules.description"></v-textarea>
-    <v-text-field label="Image (url)" v-model="show.image" :rules="showRules.image">
-      <template #append>
-        <v-btn
-          color="secondary"
-          prepend-icon="mdi-google"
-          append-icon="mdi-arrow-right"
-          :href="imageSearchUrl"
-          target="_blank"
-          :disabled="!show.title"
-        >
-          Image Search
-        </v-btn>
+  <v-form ref="formRef" flat>
+    <v-stepper :items="formParts" editable>
+      <template v-slot:item.1>
+        <div class="py-2">
+          <basic-information-form-part v-model:show="show" />
+        </div>
       </template>
-    </v-text-field>
+      <template v-slot:item.2>
+        <div class="py-2">
+          <episodes-form-part v-model:show="show" />
+        </div>
+      </template>
+      <template #actions="{ next, prev }">
+        <v-stepper-actions color="primary" @click:next="next" @click:prev="prev"></v-stepper-actions>
+      </template>
+    </v-stepper>
   </v-form>
 </template>

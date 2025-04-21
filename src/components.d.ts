@@ -8,16 +8,22 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    BasicInformationFormPart: typeof import('./components/show-form/BasicInformationFormPart.vue')['default']
     ConfirmDialog: typeof import('./components/use-dialog/confirm/ConfirmDialog.vue')['default']
+    copy: typeof import('./components/show-form/SeasonFormDialog copy.vue')['default']
     DialogProvider: typeof import('./components/use-dialog/DialogProvider.vue')['default']
+    EpisodesFormPart: typeof import('./components/show-form/EpisodesFormPart.vue')['default']
     NavigationBar: typeof import('./components/navigation/NavigationBar.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SearchFilterInput: typeof import('./components/search-filter-input/SearchFilterInput.vue')['default']
+    SeasonForm: typeof import('./components/show-form/season/SeasonForm.vue')['default']
+    SeasonFormDialog: typeof import('./components/show-form/season/SeasonFormDialog.vue')['default']
     ShowCard: typeof import('./components/show-card/ShowCard.vue')['default']
     ShowForm: typeof import('./components/show-form/ShowForm.vue')['default']
     ShowFormDialog: typeof import('./components/show-form-dialog/ShowFormDialog.vue')['default']
     ShowInfoDialog: typeof import('./components/show-info-dialog/ShowInfoDialog.vue')['default']
     SnackbarProvider: typeof import('./components/use-snackbar/SnackbarProvider.vue')['default']
+    Step1: typeof import('./components/show-form/Step1.vue')['default']
   }
 }

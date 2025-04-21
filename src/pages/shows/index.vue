@@ -40,7 +40,7 @@ const resetShowToAdd = () => {
   showToAdd.value = {
     title: "",
     description: "",
-    imageUrl: "",
+    image: "",
   } as Show;
 };
 

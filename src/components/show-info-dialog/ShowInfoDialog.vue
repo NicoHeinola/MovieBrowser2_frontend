@@ -10,7 +10,7 @@ const show = defineModel("show", {
   default: {
     title: "",
     description: "",
-    imageUrl: "",
+    image: "",
   } as Show,
   type: Object as () => Show,
 });

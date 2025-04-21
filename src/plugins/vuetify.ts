@@ -50,5 +50,10 @@ export default createVuetify({
       color: "secondary",
       density: "compact",
     },
+    VSelect: {
+      variant: "outlined",
+      color: "secondary",
+      density: "compact",
+    },
   },
 });
