@@ -29,7 +29,7 @@ const imageSearchUrl = computed(() => {
   <v-text-field label="Image (url)" v-model="show.image" :rules="showRules.image">
     <template #append>
       <v-btn
-        color="secondary"
+        color="primary"
         prepend-icon="mdi-google"
         append-icon="mdi-arrow-right"
         :href="imageSearchUrl"

@@ -130,12 +130,16 @@ const openAddEpisodeDialog = () => {
   clearEditedEpisode();
 };
 
-const openEditSeasonDialog = (season: Season) => {
+const openEditSeasonDialog = (season: Season | null) => {
+  if (!season) return;
+
   showSeasonFormDialog.value = true;
   editedSeason.value = season;
 };
 
-const openEditEpisodeDialog = (episode: Episode) => {
+const openEditEpisodeDialog = (episode: Episode | null) => {
+  if (!episode) return;
+
   showEpisodeFormDialog.value = true;
   editedEpisode.value = episode;
 };
@@ -243,7 +247,12 @@ onMounted(() => {
     :rules="showRules.seasons"
   >
     <template #append>
-      <v-btn prepend-icon="mdi-plus" @click="openAddSeasonDialog"> Add </v-btn>
+      <div class="d-flex ga-2">
+        <v-btn prepend-icon="mdi-pencil" :disabled="!currentSeason" @click.stop="openEditSeasonDialog(currentSeason)">
+          Edit
+        </v-btn>
+        <v-btn prepend-icon="mdi-plus" @click="openAddSeasonDialog">Add</v-btn>
+      </div>
     </template>
     <template #item="{ item, props: itemProps }">
       <v-list-item v-bind="itemProps">
@@ -280,7 +289,16 @@ onMounted(() => {
       clearable
     >
       <template #append>
-        <v-btn prepend-icon="mdi-plus" @click="openAddEpisodeDialog">Add</v-btn>
+        <div class="d-flex ga-2">
+          <v-btn
+            prepend-icon="mdi-pencil"
+            :disabled="!currentEpisode"
+            @click.stop="openEditEpisodeDialog(currentEpisode)"
+          >
+            Edit
+          </v-btn>
+          <v-btn prepend-icon="mdi-plus" @click="openAddEpisodeDialog">Add</v-btn>
+        </div>
       </template>
       <template #selection="{ item }">
         <v-icon
@@ -304,14 +322,7 @@ onMounted(() => {
           <template #append>
             <v-btn
               variant="text"
-              color="secondary"
-              size="small"
-              icon="mdi-pencil"
-              @click.stop="openEditEpisodeDialog(item.raw)"
-            ></v-btn>
-            <v-btn
-              variant="text"
-              color="secondary"
+              color="error"
               size="small"
               icon="mdi-trash-can"
               @click.stop="removeEpisode(item.raw)"
