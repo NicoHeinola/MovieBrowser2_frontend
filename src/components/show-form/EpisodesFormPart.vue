@@ -98,19 +98,23 @@ const formattedEpisodes = computed(() => {
 });
 
 const clearEditedSeason = () => {
-  const number = (show.value?.seasons || []).length + 1;
+  const seasons = show.value.seasons || [];
+  const biggestNumber = Math.max(0, ...seasons.map((s: Season) => s.number ?? 0));
+  const nextNumber = biggestNumber + 1;
 
   editedSeason.value = {
     title: "",
     description: "",
     image: "",
-    number,
+    number: nextNumber,
     episodes: [],
   } as Season;
 };
 
 const clearEditedEpisode = () => {
-  const nextNumber = (currentEpisodeNumber.value ?? 0) + 1;
+  const episodes = currentSeason.value?.episodes || [];
+  const biggestNumber = Math.max(0, ...episodes.map((e: Episode) => e.number ?? 0));
+  const nextNumber = biggestNumber + 1;
 
   editedEpisode.value = {
     title: "",

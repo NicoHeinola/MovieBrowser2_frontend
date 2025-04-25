@@ -68,8 +68,8 @@ const save = async () => {
     const episodes = season.episodes || [];
     for (const episode of episodes) {
       const file = show.value.seasons
-        ?.find((s) => s.id === season.id)
-        ?.episodes?.find((e) => e.id === episode.id)?.file;
+        ?.find((s) => s.number === season.number)
+        ?.episodes?.find((e) => e.number === episode.number)?.file;
 
       if (!file) {
         continue;
