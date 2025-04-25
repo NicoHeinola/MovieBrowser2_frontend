@@ -11,6 +11,9 @@ const showModel = defineModel("show", {
 
 const show = ref<Show>({} as Show);
 const showFormRef = ref<InstanceType<typeof ShowForm> | null>(null);
+
+const saving = ref<Boolean>(false);
+
 const openSnackbar = useSnackbar();
 
 const open = defineModel("open", {
@@ -34,6 +37,8 @@ const save = async () => {
 
   let createdShow: any;
 
+  saving.value = true;
+
   try {
     if (!show.value.id) {
       createdShow = await ShowService().createShow(show.value); // Backend must accept multipart/form-data
@@ -52,6 +57,7 @@ const save = async () => {
     }
   } catch (error) {
     errorSnackbar(error, openSnackbar);
+    saving.value = false;
     return;
   }
 
@@ -82,9 +88,12 @@ const save = async () => {
       });
     } catch (error) {
       errorSnackbar(error, openSnackbar);
+      saving.value = false;
       return;
     }
   }
+
+  saving.value = false;
 
   showModel.value = JSON.parse(JSON.stringify(show.value));
   close();
@@ -110,13 +119,21 @@ watch(
       </v-card-text>
 
       <v-card-actions>
-        <v-btn prepend-icon="mdi-close" color="error" variant="outlined" text="Close" @click="close"></v-btn>
+        <v-btn
+          prepend-icon="mdi-close"
+          color="error"
+          variant="outlined"
+          text="Close"
+          @click="close"
+          :loading="!!saving"
+        ></v-btn>
         <v-btn
           prepend-icon="mdi-check"
           color="success"
           variant="elevated"
           form="show-form"
           :text="'Save'"
+          :loading="!!saving"
           @click="save"
         ></v-btn>
       </v-card-actions>
