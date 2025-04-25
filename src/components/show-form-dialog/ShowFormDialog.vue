@@ -32,16 +32,18 @@ const save = async () => {
 
   if (!isValid) return;
 
+  let createdShow: any;
+
   try {
     if (!show.value.id) {
-      await ShowService().createShow(show.value); // Backend must accept multipart/form-data
+      createdShow = await ShowService().createShow(show.value); // Backend must accept multipart/form-data
       openSnackbar({
         props: {
           text: `Show "${show.value.title}" created successfully.`,
         },
       });
     } else {
-      await ShowService().updateShow(show.value.id, show.value);
+      createdShow = await ShowService().updateShow(show.value.id, show.value);
       openSnackbar({
         props: {
           text: `Show "${show.value.title}" updated successfully.`,
@@ -51,6 +53,37 @@ const save = async () => {
   } catch (error) {
     errorSnackbar(error, openSnackbar);
     return;
+  }
+
+  // Attach files to the episodes
+  const seasons = createdShow.seasons || [];
+  let uploadPromises: Promise<any>[] = [];
+  for (const season of seasons) {
+    const episodes = season.episodes || [];
+    for (const episode of episodes) {
+      const file = show.value.seasons
+        ?.find((s) => s.id === season.id)
+        ?.episodes?.find((e) => e.id === episode.id)?.file;
+
+      if (!file) {
+        continue;
+      }
+
+      const promise = ShowService().uploadEpisodeFile(createdShow.id, episode.id, file);
+      uploadPromises.push(promise);
+    }
+
+    try {
+      await Promise.all(uploadPromises);
+      openSnackbar({
+        props: {
+          text: `Episode files uploaded successfully.`,
+        },
+      });
+    } catch (error) {
+      errorSnackbar(error, openSnackbar);
+      return;
+    }
   }
 
   showModel.value = JSON.parse(JSON.stringify(show.value));
