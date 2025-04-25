@@ -41,10 +41,21 @@ export const ShowService = () => {
       headers: {
         "Content-Type": "multipart/form-data",
       },
-      timeout: 60000,
+      timeout: 30 * 60 * 1000, // 30 min since this might take a while
     });
     return response.data;
   };
 
-  return { getShows, createShow, updateShow, deleteShow, uploadEpisodeFile };
+  const cleanupShows = async () => {
+    const response = await api.post(
+      "/shows/cleanup",
+      {},
+      {
+        timeout: 4 * 60 * 1000, // 4 min since this might take a while,
+      }
+    );
+    return response.data;
+  };
+
+  return { getShows, createShow, updateShow, deleteShow, uploadEpisodeFile, cleanupShows };
 };

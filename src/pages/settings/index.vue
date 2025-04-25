@@ -7,6 +7,7 @@ import { useSnackbar } from "@/components/use-snackbar/useSnackbar";
 import { useErrorSnackbar } from "@/utils/errorSnackbar";
 import SettingFormDialog from "@/components/setting-form-dialog/SettingFormDialog.vue";
 import { useConfirm } from "@/components/use-dialog/confirm/useConfirm";
+import { ShowService } from "@/services/show.service";
 
 const settings = ref<Setting[]>([]);
 const loading = ref(false);
@@ -22,6 +23,10 @@ const newSetting = ref<Setting>({
 const dialogOpen = ref(false);
 
 const openConfirm = useConfirm();
+
+const seeding = ref<Boolean>(false);
+const cleaningShowsUp = ref<Boolean>(false);
+const deleting = ref<Boolean>(false);
 
 const getSettings = async () => {
   loading.value = true;
@@ -49,6 +54,8 @@ const deleteSetting = async (id: number) => {
 
   if (!ok) return;
 
+  deleting.value = true;
+
   try {
     await SettingService().deleteSetting(id);
     openSnackbar({ props: { text: "Setting deleted" } });
@@ -56,6 +63,8 @@ const deleteSetting = async (id: number) => {
   } catch (error) {
     errorSnackbar(error, openSnackbar);
   }
+
+  deleting.value = false;
 };
 
 const resetNewSetting = () => {
@@ -72,6 +81,8 @@ const seedSettings = async () => {
 
   if (!ok) return;
 
+  seeding.value = true;
+
   try {
     await SettingService().seedSettings();
     openSnackbar({ props: { text: "Settings seeded" } });
@@ -79,6 +90,30 @@ const seedSettings = async () => {
   } catch (error) {
     errorSnackbar(error, openSnackbar);
   }
+
+  seeding.value = false;
+};
+
+const cleanupShows = async () => {
+  const ok = await openConfirm({
+    props: {
+      title: "Cleanup Shows",
+      text: "Are you sure you want to cleanup shows? This will remove unused videos. Note: this action is PERMANENT!",
+    },
+  });
+
+  if (!ok) return;
+
+  cleaningShowsUp.value = true;
+
+  try {
+    await ShowService().cleanupShows();
+    openSnackbar({ props: { text: "Shows cleaned up" } });
+  } catch (error) {
+    errorSnackbar(error, openSnackbar);
+  }
+
+  cleaningShowsUp.value = false;
 };
 
 onMounted(getSettings);
@@ -93,7 +128,10 @@ watch(dialogOpen, (val) => {
     <h1 class="text-h4 mb-6">Settings</h1>
     <div class="d-flex ga-2">
       <v-btn color="primary" prepend-icon="mdi-plus" @click="dialogOpen = true">Add Setting</v-btn>
-      <v-btn color="error" prepend-icon="mdi-seed" @click="seedSettings">Seed Settings</v-btn>
+      <v-btn color="error" prepend-icon="mdi-seed" @click="seedSettings" :loading="!!seeding">Seed Settings</v-btn>
+      <v-btn color="error" prepend-icon="mdi-vacuum" @click="cleanupShows" :loading="!!cleaningShowsUp"
+        >Cleanup Shows</v-btn
+      >
     </div>
     <v-table class="mt-6" :loading="loading">
       <thead>
@@ -110,8 +148,20 @@ watch(dialogOpen, (val) => {
           <td>{{ setting.value }}</td>
           <td>{{ setting.type }}</td>
           <td>
-            <v-btn icon="mdi-pencil" variant="text" color="secondary" @click="editSetting(setting)" />
-            <v-btn icon="mdi-delete" variant="text" color="error" @click="deleteSetting(setting.id!)" />
+            <v-btn
+              icon="mdi-pencil"
+              variant="text"
+              color="secondary"
+              @click="editSetting(setting)"
+              :disabled="!!deleting"
+            />
+            <v-btn
+              icon="mdi-delete"
+              variant="text"
+              color="error"
+              @click="deleteSetting(setting.id!)"
+              :disabled="!!deleting"
+            />
           </td>
         </tr>
       </tbody>
