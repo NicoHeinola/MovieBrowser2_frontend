@@ -15,6 +15,7 @@ const showFormRef = ref<InstanceType<typeof ShowForm> | null>(null);
 const saving = ref<Boolean>(false);
 
 const openSnackbar = useSnackbar();
+const { errorSnackbar } = useErrorSnackbar();
 
 const open = defineModel("open", {
   default: false,
@@ -25,7 +26,10 @@ const close = () => {
   open.value = false;
 };
 
-const { errorSnackbar } = useErrorSnackbar();
+const cancel = () => {
+  show.value = JSON.parse(JSON.stringify(showModel.value));
+  close();
+};
 
 const save = async () => {
   if (!showFormRef.value) return;
@@ -132,8 +136,8 @@ watch(
           prepend-icon="mdi-close"
           color="error"
           variant="outlined"
-          text="Close"
-          @click="close"
+          text="Cancel"
+          @click="cancel"
           :loading="!!saving"
         ></v-btn>
         <v-btn

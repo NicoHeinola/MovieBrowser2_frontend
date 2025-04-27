@@ -291,8 +291,20 @@ const addMultipleEpisodes = () => {
           overlappingNumbers.push(file.name);
         }
 
+        const title = file.name
+          .split(".")[0]
+          .trim() // Remove file extension
+          // Replace all non-alphanumeric characters with underscores
+          .replace(/[^a-zA-Z0-9]/g, " ")
+          // Replace multiple consecutive underscores with a single underscore
+          .replace(/_{2,}/g, "_")
+          // Remove trailing underscore at the end of the string
+          .replace(/_$/g, "")
+          // Remove leading underscore at the start of the string
+          .replace(/^_/, "");
+
         return {
-          title: "",
+          title: title,
           description: "",
           type: EpisodeType.Episode,
           number: number,
