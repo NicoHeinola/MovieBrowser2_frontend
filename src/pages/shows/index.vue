@@ -24,7 +24,11 @@ const getShows = async () => {
 
   let data: any;
   try {
-    data = await ShowService().getShows();
+    data = await ShowService().getShows({
+      search: {
+        search: search.value,
+      },
+    });
   } catch (error) {
     errorSnackbar(error, openSnackbar);
 
