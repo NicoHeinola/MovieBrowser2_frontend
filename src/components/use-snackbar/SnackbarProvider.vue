@@ -24,7 +24,7 @@ provide("openSnackbar", openSnackbar);
 
 <template>
   <slot></slot>
-  <v-snackbar color="success" v-model="isOpen" v-bind="snackbarProps" :timeout="3000" @update:model-value="handleClose">
+  <v-snackbar color="success" v-model="isOpen" v-bind="snackbarProps" :timeout="5000" @update:model-value="handleClose">
     <template #actions>
       <v-btn color="white" text @click="isOpen = false">OK</v-btn>
     </template>

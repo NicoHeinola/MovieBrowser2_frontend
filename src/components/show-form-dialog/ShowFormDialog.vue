@@ -75,7 +75,16 @@ const save = async () => {
         continue;
       }
 
-      const promise = ShowService().uploadEpisodeFile(createdShow.id, episode.id, file);
+      const promise = ShowService()
+        .uploadEpisodeFile(createdShow.id, episode.id, file)
+        .then((v: any) => {
+          openSnackbar({
+            props: {
+              text: `Successfully uploaded a file for episode: ${episode.title} (${episode.number})`,
+            },
+          });
+          return v;
+        });
       uploadPromises.push(promise);
     }
 
@@ -83,7 +92,7 @@ const save = async () => {
       await Promise.all(uploadPromises);
       openSnackbar({
         props: {
-          text: `Episode files uploaded successfully.`,
+          text: `All episode files uploaded successfully.`,
         },
       });
     } catch (error) {
