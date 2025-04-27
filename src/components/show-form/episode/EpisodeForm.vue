@@ -28,6 +28,8 @@ const handleFileInput = (files: File[] | File | null) => {
   } else {
     episode.value.file = files;
   }
+
+  episode.value.filename = episode.value.file.name;
 };
 
 defineExpose({
@@ -64,7 +66,9 @@ defineExpose({
       show-size
       persistent-hint
       :hint="'Filename: ' + (episode.filename || 'No file has been uploaded')"
-    ></v-file-input>
+    >
+      <template #selection> {{ episode.filename }} </template>
+    </v-file-input>
     <v-textarea label="Description" v-model="episode.description" :rules="episodeRules.description"></v-textarea>
   </v-form>
 </template>

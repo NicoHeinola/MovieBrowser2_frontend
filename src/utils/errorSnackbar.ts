@@ -1,7 +1,17 @@
 import { useSnackbar } from "@/components/use-snackbar/useSnackbar";
 
 export const useErrorSnackbar = () => {
-  const errorSnackbar = (error: any, openSnackbar: (opts: any) => void) => {
+  const errorSnackbar = (error: any, openSnackbar: (opts: any) => void, isCustomError: boolean = false) => {
+    if (isCustomError) {
+      openSnackbar({
+        props: {
+          text: error,
+          color: "error",
+        },
+      });
+      return;
+    }
+
     const status = error?.response?.status;
 
     if (status === 401) {

@@ -8,6 +8,9 @@ import type Episode from "@/models/episode";
 import type Show from "@/models/show";
 import type Season from "@/models/season";
 import { EpisodeType, episodeTypeItems } from "@/models/episode";
+import { allowedFileTypes } from "./episode/episode.rules";
+import { useErrorSnackbar } from "@/utils/errorSnackbar";
+import { useSnackbar } from "../use-snackbar/useSnackbar";
 
 const props = defineProps<{}>();
 
@@ -66,6 +69,8 @@ const showEpisodeFormDialog = ref<boolean>(false);
 const editedEpisode = ref<Episode>();
 
 const openConfirm = useConfirm();
+const { errorSnackbar } = useErrorSnackbar();
+const openSnackbar = useSnackbar();
 
 const formattedSeasons = computed(() => {
   if (!show.value?.seasons) return [];
@@ -228,6 +233,109 @@ const saveEpisode = async (newEpisode: Episode, oldEpisode: Episode) => {
   currentEpisodeNumber.value = newEpisode.number;
 };
 
+const addMultipleEpisodes = () => {
+  if (!currentSeason.value) return;
+
+  const inputRef = ref<HTMLInputElement | null>(null);
+
+  inputRef.value = document.createElement("input");
+  inputRef.value.type = "file";
+  inputRef.value.accept = Object.values(allowedFileTypes).join(",");
+  inputRef.value.multiple = true;
+  inputRef.value.style.display = "none";
+
+  inputRef.value.addEventListener("change", (event: Event) => {
+    const files = (event.target as HTMLInputElement).files;
+    if (!files || !currentSeason.value) return;
+
+    const currentSeasonEpisodes = currentSeason.value?.episodes || [];
+    const currentSeasonEpisodeNumbers = currentSeasonEpisodes.map((episode: Episode) => episode.number ?? 0);
+
+    const overlappingNumbers: Array<any> = [];
+
+    const episodes = Array.from(files)
+      .map((file, idx) => {
+        // Figure out the number based on rules
+        const filename = file.name;
+        // Try to extract episode number from filename using regex patterns
+        let number: number | undefined;
+
+        // Patterns to match various filename formats
+        const patterns = [
+          / - (\d{2,3})(?:\D|$)/, // e.g. " - 11", " - 123"
+          /Movie\s?(\d{2,3})/, // e.g. "Movie 02"
+          /Season\s?\d+\s?-\s?(\d{2,3})/, // e.g. "Season 02 - 04"
+          /S\d{2}E(\d{2,3})/i, // e.g. "S01E01"
+          / - (\d{2,3})\s?\[/, // e.g. " - 09 ["
+        ];
+
+        for (const pattern of patterns) {
+          const match = filename.match(pattern);
+          if (match && match[1]) {
+            number = parseInt(match[1], 10);
+            break;
+          }
+        }
+
+        // Fallback: try to find the last number in the filename
+        if (number === undefined) {
+          const fallback = filename.match(/(\d{2,3})(?!.*\d)/);
+          if (fallback && fallback[1]) {
+            number = parseInt(fallback[1], 10);
+          }
+        }
+
+        // If still not found, set to -1 and show an error
+        if (number === undefined) {
+          number = -1;
+          overlappingNumbers.push(file.name);
+        }
+
+        return {
+          title: "",
+          description: "",
+          type: EpisodeType.Episode,
+          number: number,
+          filename: file.name,
+          file: file,
+        } as Episode;
+      })
+      .filter((episode: Episode) => {
+        const number = episode.number ?? 0;
+        const includes = currentSeasonEpisodeNumbers.includes(number) && number > 0;
+
+        if (includes) {
+          overlappingNumbers.push(number);
+        }
+
+        return !includes;
+      });
+
+    if (overlappingNumbers.length > 0) {
+      errorSnackbar(
+        `Couldn't add all episodes! Overlapping numbers: ${overlappingNumbers.join(",")}`,
+        openSnackbar,
+        true
+      );
+    } else {
+      openSnackbar({
+        props: {
+          text: "Added multiple episodes successfully!",
+        },
+      });
+    }
+
+    if (!currentSeason.value.episodes) currentSeason.value.episodes = [];
+    currentSeason.value.episodes.push(...episodes);
+
+    currentEpisodeNumber.value = episodes[episodes.length - 1].number;
+  });
+
+  document.body.appendChild(inputRef.value);
+  inputRef.value.value = ""; // reset
+  inputRef.value.click();
+};
+
 watch(
   () => currentSeasonNumber.value,
   (_?: number) => {
@@ -295,6 +403,7 @@ onMounted(() => {
             Edit
           </v-btn>
           <v-btn prepend-icon="mdi-plus" @click="openAddEpisodeDialog">Add</v-btn>
+          <v-btn prepend-icon="mdi-plus-box-multiple" @click="addMultipleEpisodes">Add multiple</v-btn>
         </div>
       </template>
       <template #selection="{ item }">
