@@ -17,6 +17,7 @@ const setting = ref<Setting>({} as Setting);
 const settingFormRef = ref<InstanceType<typeof SettingForm> | null>(null);
 const openSnackbar = useSnackbar();
 const { errorSnackbar } = useErrorSnackbar();
+const saving = ref<Boolean>(false);
 
 const close = () => {
   open.value = false;
@@ -26,6 +27,8 @@ const save = async () => {
   const isValid = await settingFormRef.value?.formRef?.validate();
 
   if (!isValid?.valid) return;
+
+  saving.value = true;
 
   try {
     if (setting.value.id) {
@@ -41,6 +44,8 @@ const save = async () => {
   } catch (error) {
     errorSnackbar(error, openSnackbar);
   }
+
+  saving.value = false;
 };
 
 const emit = defineEmits(["save", "cancel"]);
@@ -69,9 +74,23 @@ watch(
         <setting-form ref="settingFormRef" v-model:setting="setting" />
       </v-card-text>
       <v-card-actions>
-        <v-spacer />
-        <v-btn text @click="cancel">Cancel</v-btn>
-        <v-btn color="primary" @click="save">{{ setting?.id ? "Update" : "Create" }}</v-btn>
+        <v-btn
+          prepend-icon="mdi-close"
+          color="error"
+          variant="outlined"
+          text="Cancel"
+          @click="cancel"
+          :loading="!!saving"
+        ></v-btn>
+        <v-btn
+          prepend-icon="mdi-check"
+          color="success"
+          variant="elevated"
+          form="setting-form"
+          :text="setting?.id ? 'Update' : 'Create'"
+          :loading="!!saving"
+          @click="save"
+        ></v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
