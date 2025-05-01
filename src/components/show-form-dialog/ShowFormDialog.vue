@@ -84,7 +84,7 @@ const save = async () => {
         .then((v: any) => {
           openSnackbar({
             props: {
-              text: `Successfully uploaded a file for episode: ${episode.title} (${episode.number})`,
+              text: `Successfully uploaded a file: ${episode.title} (${episode.number})`,
             },
           });
           return v;

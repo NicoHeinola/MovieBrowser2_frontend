@@ -57,5 +57,15 @@ export const ShowService = () => {
     return response.data;
   };
 
-  return { getShows, createShow, updateShow, deleteShow, uploadEpisodeFile, cleanupShows };
+  const watchEpisode = async (showId: number, episodeId: number) => {
+    const response = await api.post(`/shows/${showId}/episodes/${episodeId}/watch`, {});
+    return response.data;
+  };
+
+  const watchSeason = async (showId: number, seasonId: number) => {
+    const response = await api.post(`/shows/${showId}/seasons/${seasonId}/watch`, {});
+    return response.data;
+  };
+
+  return { getShows, createShow, updateShow, deleteShow, uploadEpisodeFile, cleanupShows, watchEpisode, watchSeason };
 };

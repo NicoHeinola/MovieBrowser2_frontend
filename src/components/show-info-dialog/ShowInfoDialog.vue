@@ -85,10 +85,41 @@ const deleteShow = async () => {
   }
 };
 
+const watchEpisode = async (episodeId?: number) => {
+  if (!show.value.id || episodeId === undefined) return;
+
+  try {
+    await ShowService().watchEpisode(show.value.id, episodeId);
+
+    openSnackbar({
+      props: {
+        text: `Started watching episode successfully!.`,
+      },
+    });
+  } catch (error) {
+    errorSnackbar(error, openSnackbar);
+  }
+};
+
+const watchSeason = async () => {
+  if (!show.value.id || !selectedSeason.value?.id) return;
+
+  try {
+    await ShowService().watchSeason(show.value.id, selectedSeason.value?.id);
+    openSnackbar({
+      props: {
+        text: `Started watching season successfully!.`,
+      },
+    });
+  } catch (error) {
+    errorSnackbar(error, openSnackbar);
+  }
+};
+
 // Helper to get icon for episode type
-function getEpisodeTypeIcon(type?: EpisodeType) {
+const getEpisodeTypeIcon = (type?: EpisodeType) => {
   return episodeTypeItems.find((item) => item.value === type)?.icon || "";
-}
+};
 </script>
 
 <template>
@@ -146,11 +177,18 @@ function getEpisodeTypeIcon(type?: EpisodeType) {
             <template v-if="selectedSeason">
               <div class="d-flex align-center ga-2">
                 <p>Episodes</p>
-                <v-btn variant="text" size="small" append-icon="mdi-play" color="secondary"> Watch all </v-btn>
+                <v-btn variant="text" size="small" append-icon="mdi-play" color="secondary" @click="watchSeason">
+                  Watch all
+                </v-btn>
               </div>
 
               <div class="d-flex flex-row ga-2 flex-wrap">
-                <v-btn v-for="episode in selectedSeason.episodes" :key="episode.id" append-icon="mdi-play">
+                <v-btn
+                  v-for="episode in selectedSeason.episodes"
+                  :key="episode.id"
+                  append-icon="mdi-play"
+                  @click="watchEpisode(episode.id)"
+                >
                   <template #prepend>
                     <v-icon v-if="getEpisodeTypeIcon(episode.type)" class="mr-1">
                       {{ getEpisodeTypeIcon(episode.type) }}
