@@ -124,7 +124,7 @@ watch(dialogOpen, (val) => {
 </script>
 
 <template>
-  <v-container class="pa-8">
+  <v-container class="pa-12">
     <h1 class="text-h4 mb-6">Settings</h1>
     <div class="d-flex ga-2">
       <v-btn color="primary" prepend-icon="mdi-plus" @click="dialogOpen = true">Add Setting</v-btn>

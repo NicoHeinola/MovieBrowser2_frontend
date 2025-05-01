@@ -31,11 +31,11 @@ const logout = () => {
 };
 
 const login = () => {
-  router.push("/login");
+  router.push("/auth/login");
 };
 
 const register = () => {
-  router.push("/register");
+  router.push("/auth/register");
 };
 </script>
 

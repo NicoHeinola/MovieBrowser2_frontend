@@ -8,6 +8,7 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    AuthForm: typeof import('./components/auth-form/AuthForm.vue')['default']
     BasicInformationFormPart: typeof import('./components/show-form/BasicInformationFormPart.vue')['default']
     ConfirmDialog: typeof import('./components/use-dialog/confirm/ConfirmDialog.vue')['default']
     copy: typeof import('./components/show-form/SeasonFormDialog copy.vue')['default']
