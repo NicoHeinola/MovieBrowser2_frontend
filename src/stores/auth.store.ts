@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 import { computed } from "vue";
 import type User from "@/models/user";
 import { AuthService } from "@/services/auth.service";
-import { StorageSerializers, useStorage } from "@vueuse/core";
+import { useStorage } from "@vueuse/core";
 
 export const useAuthStore = defineStore("auth", () => {
   const token = useStorage<string | null>("authToken", null);
@@ -22,6 +22,11 @@ export const useAuthStore = defineStore("auth", () => {
   });
 
   const isAuthenticated = computed(() => !!token.value);
+  const isAdmin = computed(() => {
+    if (!user.value) return false;
+    return !!user.value.is_admin;
+  });
+
   const refreshTokenTimeoutId = ref<number | null>(null);
 
   const setToken = (newToken: string | null) => {
@@ -96,6 +101,7 @@ export const useAuthStore = defineStore("auth", () => {
     token,
     user,
     isAuthenticated,
+    isAdmin,
     login,
     logout,
     fetchUser,

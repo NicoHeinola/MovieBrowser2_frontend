@@ -5,6 +5,7 @@ import ShowFormDialog from "@/components/show-form-dialog/ShowFormDialog.vue";
 import { useSnackbar } from "@/components/use-snackbar/useSnackbar";
 import type Show from "@/models/show";
 import { ShowService } from "@/services/show.service";
+import { useAuthStore } from "@/stores/auth.store";
 import { useErrorSnackbar } from "@/utils/errorSnackbar";
 
 const search = ref<string>("");
@@ -13,6 +14,8 @@ const addShowDialogOpen = ref<boolean>(false);
 
 const shows = ref<Show[]>([]);
 const loadingShows = ref<boolean>(false);
+
+const auth = useAuthStore();
 
 const showToAdd = ref<Show>({} as Show);
 
@@ -72,7 +75,7 @@ onMounted(async () => {
           class="flex-1-1-100"
           @click:search="getShows"
         ></search-filter-input>
-        <v-btn prepend-icon="mdi-plus" color="primary" @click="addShowDialogOpen = true">Add</v-btn>
+        <v-btn prepend-icon="mdi-plus" color="primary" @click="addShowDialogOpen = true" v-if="auth.isAdmin">Add</v-btn>
       </div>
     </div>
     <div class="d-flex flex-wrap justify-start ga-4">

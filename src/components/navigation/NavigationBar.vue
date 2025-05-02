@@ -14,6 +14,7 @@ const links = ref([
     text: "Settings",
     icon: "mdi-cog",
     route: "/settings",
+    admin_only: true,
   },
 ]);
 
@@ -41,6 +42,7 @@ const logout = async () => {
   }
 
   authStore.logout();
+  router.push("/auth/login");
 };
 
 const login = () => {
@@ -55,21 +57,22 @@ const register = () => {
 <template>
   <v-navigation-drawer :model-value="true" location="left">
     <template #prepend>
-      <v-list-item
-        class="pa-2"
-        link
-        v-for="link in links"
-        :key="link.text"
-        :class="{ 'active-link': selectedLink === link.route }"
-        :to="link.route"
-        :color="getLinkColor(link.route)"
-      >
-        <template v-slot:prepend>
-          <v-icon :icon="link.icon"></v-icon>
-        </template>
+      <template v-for="link in links" :key="link.text">
+        <v-list-item
+          class="pa-2"
+          link
+          :class="{ 'active-link': selectedLink === link.route }"
+          :to="link.route"
+          :color="getLinkColor(link.route)"
+          v-if="!link.admin_only || (link.admin_only && authStore.isAdmin)"
+        >
+          <template v-slot:prepend>
+            <v-icon :icon="link.icon"></v-icon>
+          </template>
 
-        <v-list-item-title v-text="link.text"></v-list-item-title>
-      </v-list-item>
+          <v-list-item-title v-text="link.text"></v-list-item-title>
+        </v-list-item>
+      </template>
     </template>
     <template #append>
       <v-list-item v-if="authStore.isAuthenticated" link @click="logout">
