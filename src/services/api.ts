@@ -1,4 +1,4 @@
-import { useAuthStore } from "@/stores/auth";
+import { useAuthStore } from "@/stores/auth.store";
 import axios from "axios";
 
 const api = axios.create({
@@ -9,7 +9,15 @@ const api = axios.create({
   },
 });
 
-api.interceptors.request.use((config) => {
+const basicAPI = axios.create({
+  baseURL: import.meta.env.VITE_API_URL,
+  timeout: 30 * 1000, // 30 seconds
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
+const authCheck = (config: any) => {
   const auth = useAuthStore();
 
   if (auth.isAuthenticated) {
@@ -20,6 +28,16 @@ api.interceptors.request.use((config) => {
   }
 
   return config;
+};
+
+api.interceptors.request.use((config) => {
+  config = authCheck(config);
+  return config;
+});
+
+basicAPI.interceptors.request.use((config) => {
+  config = authCheck(config);
+  return config;
 });
 
 api.interceptors.response.use(
@@ -29,7 +47,12 @@ api.interceptors.response.use(
   (error) => {
     if (error.response.status === 401) {
       const auth = useAuthStore();
-      auth.logout();
+
+      const success = auth.refreshToken();
+
+      if (!success) {
+        auth.logout();
+      }
     }
 
     return Promise.reject(error);
@@ -37,3 +60,4 @@ api.interceptors.response.use(
 );
 
 export default api;
+export { basicAPI, api };

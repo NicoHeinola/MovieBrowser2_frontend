@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { ref, computed } from "vue";
 import { useRoute } from "vue-router";
-import { useAuthStore } from "@/stores/auth";
+import { useAuthStore } from "@/stores/auth.store";
 
 const links = ref([
   {

@@ -2,7 +2,7 @@
 import AuthForm from "@/components/auth-form/AuthForm.vue";
 import { useSnackbar } from "@/components/use-snackbar/useSnackbar";
 import type User from "@/models/user";
-import { useAuthStore } from "@/stores/auth";
+import { useAuthStore } from "@/stores/auth.store";
 import { useErrorSnackbar } from "@/utils/errorSnackbar";
 
 const user = ref<User>({
