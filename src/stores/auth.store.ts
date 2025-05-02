@@ -2,11 +2,25 @@ import { defineStore } from "pinia";
 import { computed } from "vue";
 import type User from "@/models/user";
 import { AuthService } from "@/services/auth.service";
-import { useStorage } from "@vueuse/core";
+import { StorageSerializers, useStorage } from "@vueuse/core";
 
 export const useAuthStore = defineStore("auth", () => {
   const token = useStorage<string | null>("authToken", null);
-  const user = useStorage<User | null>("authUser", null);
+  const user = useStorage<User | null>("authUser", null, undefined, {
+    serializer: {
+      read: (value) => {
+        try {
+          return JSON.parse(value);
+        } catch (e) {
+          return null;
+        }
+      },
+      write: (value) => {
+        return JSON.stringify(value);
+      },
+    },
+  });
+
   const isAuthenticated = computed(() => !!token.value);
   const refreshTokenTimeoutId = ref<number | null>(null);
 

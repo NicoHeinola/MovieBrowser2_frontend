@@ -2,6 +2,7 @@
 import { ref, computed } from "vue";
 import { useRoute } from "vue-router";
 import { useAuthStore } from "@/stores/auth.store";
+import { useConfirm } from "../use-dialog/confirm/useConfirm";
 
 const links = ref([
   {
@@ -20,13 +21,25 @@ const router = useRouter();
 const route = useRoute();
 const authStore = useAuthStore();
 
+const openConfirm = useConfirm();
+
 const selectedLink = computed(() => route.path);
 
 const getLinkColor = (route: string) => {
   return selectedLink.value === route ? "secondary" : "";
 };
 
-const logout = () => {
+const logout = async () => {
+  const ok = await openConfirm({
+    props: {
+      text: "Do you want to logout?",
+    },
+  });
+
+  if (!ok) {
+    return;
+  }
+
   authStore.logout();
 };
 
@@ -64,7 +77,7 @@ const register = () => {
           <v-icon icon="mdi-logout"></v-icon>
         </template>
 
-        <v-list-item-title>Logout</v-list-item-title>
+        <v-list-item-title>Logout ({{ authStore.user?.username ?? "Unknown" }})</v-list-item-title>
       </v-list-item>
       <template v-else>
         <v-list-item link @click="login">
