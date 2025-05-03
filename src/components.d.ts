@@ -31,10 +31,13 @@ declare module 'vue' {
     ShowInfoDialog: typeof import('./components/show-info-dialog/ShowInfoDialog.vue')['default']
     SnackbarProvider: typeof import('./components/use-snackbar/SnackbarProvider.vue')['default']
     Step1: typeof import('./components/show-form/Step1.vue')['default']
-    TorrentForm: typeof import('./components/torrent-website-form/TorrentWebsiteForm.vue')['default']
+    TorrentForm: typeof import('./components/website-form/WebsiteForm.vue')['default']
     TorrentFormDialog: typeof import('./components/torrent-website-form-dialog/TorrentFormDialog.vue')['default']
-    TorrentWebsiteCard: typeof import('./components/torrent-website-card/TorrentWebsiteCard.vue')['default']
-    TorrentWebsiteForm: typeof import('./components/torrent-website-form/TorrentWebsiteForm.vue')['default']
-    TorrentWebsiteFormDialog: typeof import('./components/torrent-website-form-dialog/TorrentWebsiteFormDialog.vue')['default']
+    TorrentWebsiteCard: typeof import('./components/website-card/WebsiteCard.vue')['default']
+    TorrentWebsiteForm: typeof import('./components/website-form/WebsiteForm.vue')['default']
+    TorrentWebsiteFormDialog: typeof import('./components/website-form-dialog/WebsiteFormDialog.vue')['default']
+    WebsiteCard: typeof import('./components/website-card/WebsiteCard.vue')['default']
+    WebsiteForm: typeof import('./components/website-form/WebsiteForm.vue')['default']
+    WebsiteFormDialog: typeof import('./components/website-form-dialog/WebsiteFormDialog.vue')['default']
   }
 }

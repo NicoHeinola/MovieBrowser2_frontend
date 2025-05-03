@@ -11,9 +11,9 @@ const links = ref([
     route: "/shows",
   },
   {
-    text: "Torrent websites",
+    text: "Websites",
     icon: "mdi-skull-crossbones",
-    route: "/torrent-websites",
+    route: "/websites",
   },
   {
     text: "Settings",

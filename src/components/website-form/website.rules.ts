@@ -9,7 +9,7 @@ const urlRule = (v: string) => {
   }
 };
 
-export const torrentWebsiteRules = {
+export const websiteRules = {
   title: [requiredRule("Title")],
   url: [requiredRule("URL"), urlRule],
 };

@@ -1,18 +1,18 @@
 <script lang="ts" setup>
-import type TorrentWebsite from "@/models/torrentWebsite";
-import TorrentWebsiteFormDialog from "../torrent-website-form-dialog/TorrentWebsiteFormDialog.vue";
+import type Website from "@/models/Website";
+import WebsiteFormDialog from "../website-form-dialog/WebsiteFormDialog.vue";
 import { useConfirm } from "../use-dialog/confirm/useConfirm";
 import { useSnackbar } from "../use-snackbar/useSnackbar";
 import { useErrorSnackbar } from "@/utils/errorSnackbar";
-import { TorrentWebsiteService } from "@/services/torrentWebsite.service";
+import { WebsiteService } from "@/services/website.service";
 import { useAuthStore } from "@/stores/auth.store";
 
-const torrentWebsite = defineModel("torrentWebsite", {
-  type: Object as () => TorrentWebsite,
+const website = defineModel("website", {
+  type: Object as () => Website,
 });
 
 const emit = defineEmits<{
-  (e: "delete:torrentWebsite", torrentWebsite: TorrentWebsite): void;
+  (e: "delete:website", website: Website): void;
 }>();
 
 const openConfirm = useConfirm();
@@ -26,7 +26,7 @@ const deleting = ref<Boolean>(false);
 
 const maxDescriptionLength = 150;
 const parsedDescription = computed(() => {
-  const description = torrentWebsite.value?.description;
+  const description = website.value?.description;
   if (!description) {
     return "";
   }
@@ -35,17 +35,17 @@ const parsedDescription = computed(() => {
     : description;
 });
 
-const deleteTorrentWebsite = async () => {
-  if (!torrentWebsite.value) return;
+const deleteWebsite = async () => {
+  if (!website.value) return;
 
-  const id = torrentWebsite.value.id;
+  const id = website.value.id;
 
   if (!id) return;
 
   const ok = await openConfirm({
     props: {
-      title: "Delete Torrent Website",
-      text: "Are you sure you want to delete this torrent website?",
+      title: "Delete Website",
+      text: "Are you sure you want to delete this website?",
     },
   });
 
@@ -54,9 +54,9 @@ const deleteTorrentWebsite = async () => {
   deleting.value = true;
 
   try {
-    await TorrentWebsiteService().deleteTorrentWebsite(id);
-    openSnackbar({ props: { text: "Torrent website deleted" } });
-    emit("delete:torrentWebsite", torrentWebsite.value);
+    await WebsiteService().deleteWebsite(id);
+    openSnackbar({ props: { text: "Website deleted" } });
+    emit("delete:website", website.value);
   } catch (error) {
     errorSnackbar(error, openSnackbar);
   }
@@ -65,7 +65,7 @@ const deleteTorrentWebsite = async () => {
 };
 
 const openWebsite = () => {
-  window.open(torrentWebsite.value?.url, "_blank");
+  window.open(website.value?.url, "_blank");
 };
 </script>
 
@@ -73,22 +73,22 @@ const openWebsite = () => {
   <v-card width="300" height="200" class="d-flex flex-column">
     <v-card-text class="button-card-2 pb-0">
       <v-btn width="300" color="" variant="plain" class="flex-1-1-100 h-100" @click="openWebsite">
-        <v-tooltip activator="parent" location="right">{{ torrentWebsite?.url }}</v-tooltip>
+        <v-tooltip activator="parent" location="right">{{ website?.url }}</v-tooltip>
         <div class="d-flex ga-2 flex-column flex-wrap text-truncate">
           <div class="d-flex ga-2 align-center">
-            <v-icon class="ma-0" size="20" color="secondary" v-if="torrentWebsite?.icon">
-              {{ torrentWebsite?.icon }}
+            <v-icon class="ma-0" size="20" color="secondary" v-if="website?.icon">
+              {{ website?.icon }}
             </v-icon>
-            <b>{{ torrentWebsite?.title }}</b>
+            <b>{{ website?.title }}</b>
           </div>
           <p class="text-subtitle-2 text-grey-lighten-1 text-wrap text-start">
             <v-tooltip
               max-width="500"
               activator="parent"
               location="bottom"
-              v-if="(torrentWebsite?.description?.length ?? 0) > maxDescriptionLength"
+              v-if="(website?.description?.length ?? 0) > maxDescriptionLength"
             >
-              <span>{{ torrentWebsite?.description }}</span>
+              <span>{{ website?.description }}</span>
             </v-tooltip>
             {{ parsedDescription }}
           </p>
@@ -96,21 +96,15 @@ const openWebsite = () => {
       </v-btn>
     </v-card-text>
     <v-card-actions class="d-flex justify-end" v-if="auth.isAdmin">
-      <v-btn
-        @click="deleteTorrentWebsite()"
-        prepend-icon="mdi-delete"
-        variant="outlined"
-        color="error"
-        :loading="!!deleting"
-      >
+      <v-btn @click="deleteWebsite()" prepend-icon="mdi-delete" variant="outlined" color="error" :loading="!!deleting">
         Delete
       </v-btn>
       <v-btn @click="dialogOpen = true" variant="elevated" color="primary" prepend-icon="mdi-pencil">Edit</v-btn>
     </v-card-actions>
   </v-card>
-  <torrent-website-form-dialog
+  <website-form-dialog
     v-model:open="dialogOpen"
-    v-model:torrent-website="torrentWebsite"
+    v-model:website="website"
     @save="dialogOpen = false"
     @cancel="dialogOpen = false"
   />
