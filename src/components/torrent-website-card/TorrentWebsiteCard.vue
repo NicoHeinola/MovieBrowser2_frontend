@@ -103,9 +103,9 @@ const openWebsite = () => {
         color="error"
         :loading="!!deleting"
       >
-        Delete</v-btn
-      >
-      <v-btn @click="dialogOpen = true" variant="elevated" color="primary" prepend-icon="mdi-pencil"> Edit</v-btn>
+        Delete
+      </v-btn>
+      <v-btn @click="dialogOpen = true" variant="elevated" color="primary" prepend-icon="mdi-pencil">Edit</v-btn>
     </v-card-actions>
   </v-card>
   <torrent-website-form-dialog

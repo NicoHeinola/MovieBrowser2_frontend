@@ -291,5 +291,19 @@
   "mdi-whale",
   "mdi-wrench",
   "mdi-yoga",
-  "mdi-zebra"
+  "mdi-zebra",
+  "mdi-cat",
+  "mdi-play",
+  "mdi-pause",
+  "mdi-stop",
+  "mdi-skip-next",
+  "mdi-skip-previous",
+  "mdi-fast-forward",
+  "mdi-rewind",
+  "mdi-play-circle",
+  "mdi-play-box",
+  "mdi-television",
+  "mdi-television-classic",
+  "mdi-television-guide",
+  "mdi-television-box"
 ]
