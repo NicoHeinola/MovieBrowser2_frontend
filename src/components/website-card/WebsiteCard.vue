@@ -24,7 +24,7 @@ const auth = useAuthStore();
 const dialogOpen = ref<boolean>(false);
 const deleting = ref<Boolean>(false);
 
-const maxDescriptionLength = 150;
+const maxDescriptionLength = 120;
 const parsedDescription = computed(() => {
   const description = website.value?.description;
   if (!description) {
@@ -70,18 +70,18 @@ const openWebsite = () => {
 </script>
 
 <template>
-  <v-card width="300" height="200" class="d-flex flex-column">
-    <v-card-text class="button-card-2 pb-0">
+  <v-card width="300" height="250" class="d-flex flex-column">
+    <v-card-text class="button-card-2">
       <v-btn width="300" color="" variant="plain" class="flex-1-1-100 h-100" @click="openWebsite">
         <v-tooltip activator="parent" location="right">{{ website?.url }}</v-tooltip>
-        <div class="d-flex ga-2 flex-column flex-wrap text-truncate">
+        <div class="d-flex ga-2 flex-column flex-wrap text-truncate w-100">
           <div class="d-flex ga-2 align-center">
             <v-icon class="ma-0" size="20" color="secondary" v-if="website?.icon">
               {{ website?.icon }}
             </v-icon>
             <b>{{ website?.title }}</b>
           </div>
-          <p class="text-subtitle-2 text-grey-lighten-1 text-wrap text-start">
+          <p class="text-subtitle-2 text-grey-lighten-1 text-wrap text-start w-100">
             <v-tooltip
               max-width="500"
               activator="parent"
@@ -92,10 +92,15 @@ const openWebsite = () => {
             </v-tooltip>
             {{ parsedDescription }}
           </p>
+          <div class="d-flex ga-2 flex-wrap">
+            <v-chip color="secondary" v-for="(tag, index) in website?.tags" :key="tag.name">
+              {{ tag.name }}
+            </v-chip>
+          </div>
         </div>
       </v-btn>
     </v-card-text>
-    <v-card-actions class="d-flex justify-end" v-if="auth.isAdmin">
+    <v-card-actions class="d-flex align-center justify-end pt-0" v-if="auth.isAdmin">
       <v-btn @click="deleteWebsite()" prepend-icon="mdi-delete" variant="outlined" color="error" :loading="!!deleting">
         Delete
       </v-btn>
@@ -120,9 +125,9 @@ const openWebsite = () => {
     width: 100%;
     height: auto;
 
-    :deep(.v-btn__content) {
+    .v-btn__content {
       width: 100%;
-      height: 100%;
+      height: auto;
     }
   }
 }
