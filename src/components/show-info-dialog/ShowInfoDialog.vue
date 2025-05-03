@@ -7,6 +7,7 @@ import { useSnackbar } from "../use-snackbar/useSnackbar";
 import { useErrorSnackbar } from "@/utils/errorSnackbar";
 import type Season from "@/models/season";
 import { EpisodeType, episodeTypeItems } from "@/models/episode";
+import { useAuthStore } from "@/stores/auth.store";
 
 const show = defineModel("show", {
   default: {
@@ -45,6 +46,8 @@ const description = computed(() => {
     ? show.value.description.slice(0, maxDescriptionLength) + "..."
     : show.value.description;
 });
+
+const auth = useAuthStore();
 
 const openShowFormDialog = () => {
   showFormDialogOpen.value = true;
@@ -213,6 +216,7 @@ const getEpisodeTypeIcon = (type?: EpisodeType) => {
             variant="elevated"
             text="Delete"
             @click="deleteShow"
+            v-if="auth.isAdmin"
           ></v-btn>
           <v-spacer></v-spacer>
           <v-btn prepend-icon="mdi-close" color="error" variant="outlined" text="Close" @click="close"></v-btn>
@@ -222,6 +226,7 @@ const getEpisodeTypeIcon = (type?: EpisodeType) => {
             variant="elevated"
             text="Edit"
             @click="openShowFormDialog"
+            v-if="auth.isAdmin"
           ></v-btn>
         </v-card-actions>
       </v-card>

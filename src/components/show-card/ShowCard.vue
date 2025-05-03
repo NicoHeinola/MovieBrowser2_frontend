@@ -17,11 +17,15 @@ const emit = defineEmits<{
 }>();
 
 const infoDialogOpen = ref(false);
+
+const startWatching = () => {
+  console.log("Watch");
+};
 </script>
 
 <template>
   <v-card width="300" height="200">
-    <v-btn class="d-flex w-100 h-100 pa-0 button-card" color="" variant="plain" @click="console.log('Watch')">
+    <v-btn class="d-flex w-100 h-100 pa-0 button-card" color="" variant="plain" @click="startWatching">
       <v-img
         :src="show.image"
         cover

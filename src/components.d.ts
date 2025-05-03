@@ -33,6 +33,7 @@ declare module 'vue' {
     Step1: typeof import('./components/show-form/Step1.vue')['default']
     TorrentForm: typeof import('./components/torrent-website-form/TorrentWebsiteForm.vue')['default']
     TorrentFormDialog: typeof import('./components/torrent-website-form-dialog/TorrentFormDialog.vue')['default']
+    TorrentWebsiteCard: typeof import('./components/torrent-website-card/TorrentWebsiteCard.vue')['default']
     TorrentWebsiteForm: typeof import('./components/torrent-website-form/TorrentWebsiteForm.vue')['default']
     TorrentWebsiteFormDialog: typeof import('./components/torrent-website-form-dialog/TorrentWebsiteFormDialog.vue')['default']
   }
