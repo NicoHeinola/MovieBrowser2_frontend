@@ -16,6 +16,7 @@ declare module 'vue' {
     EpisodeForm: typeof import('./components/show-form/episode/EpisodeForm.vue')['default']
     EpisodeFormDialog: typeof import('./components/show-form/episode/EpisodeFormDialog.vue')['default']
     EpisodesFormPart: typeof import('./components/show-form/EpisodesFormPart.vue')['default']
+    IconsAutocomplete: typeof import('./components/icons-autocomplete/IconsAutocomplete.vue')['default']
     NavigationBar: typeof import('./components/navigation/NavigationBar.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
@@ -30,5 +31,9 @@ declare module 'vue' {
     ShowInfoDialog: typeof import('./components/show-info-dialog/ShowInfoDialog.vue')['default']
     SnackbarProvider: typeof import('./components/use-snackbar/SnackbarProvider.vue')['default']
     Step1: typeof import('./components/show-form/Step1.vue')['default']
+    TorrentForm: typeof import('./components/torrent-website-form/TorrentWebsiteForm.vue')['default']
+    TorrentFormDialog: typeof import('./components/torrent-website-form-dialog/TorrentFormDialog.vue')['default']
+    TorrentWebsiteForm: typeof import('./components/torrent-website-form/TorrentWebsiteForm.vue')['default']
+    TorrentWebsiteFormDialog: typeof import('./components/torrent-website-form-dialog/TorrentWebsiteFormDialog.vue')['default']
   }
 }

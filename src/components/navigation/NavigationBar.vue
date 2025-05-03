@@ -11,6 +11,11 @@ const links = ref([
     route: "/shows",
   },
   {
+    text: "Torrent websites",
+    icon: "mdi-skull-crossbones",
+    route: "/torrent-websites",
+  },
+  {
     text: "Settings",
     icon: "mdi-cog",
     route: "/settings",
