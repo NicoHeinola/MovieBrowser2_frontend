@@ -34,10 +34,10 @@ const save = async () => {
   try {
     if (torrentWebsite.value.id) {
       await TorrentWebsiteService().updateTorrentWebsite(torrentWebsite.value.id, torrentWebsite.value);
-      openSnackbar({ props: { text: "torrentWebsite updated" } });
+      openSnackbar({ props: { text: "Torrent website updated" } });
     } else {
       await TorrentWebsiteService().createTorrentWebsite(torrentWebsite.value);
-      openSnackbar({ props: { text: "torrentWebsite created" } });
+      openSnackbar({ props: { text: "Torrent website created" } });
     }
     torrentWebsiteModel.value = JSON.parse(JSON.stringify(torrentWebsite.value));
     close();

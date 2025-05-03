@@ -50,7 +50,7 @@ const deleteTorrent = async (id: number) => {
 
   try {
     await TorrentWebsiteService().deleteTorrentWebsite(id);
-    openSnackbar({ props: { text: "TorrentWebsite deleted" } });
+    openSnackbar({ props: { text: "Torrent website deleted" } });
     await gettorrentWebsites();
   } catch (error) {
     errorSnackbar(error, openSnackbar);

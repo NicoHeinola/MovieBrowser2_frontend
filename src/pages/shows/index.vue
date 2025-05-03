@@ -58,8 +58,8 @@ onMounted(async () => {
 </script>
 
 <template>
-  <v-container class="d-flex flex-column pa-12">
-    <h1 class="text-h4 mb-6">Movies</h1>
+  <v-container class="d-flex flex-column ga-6 pa-12">
+    <h1 class="text-h4">Movies</h1>
     <div class="d-flex flex-column w-100 ga-4">
       <div class="d-flex align-center ga-2">
         <search-filter-input
