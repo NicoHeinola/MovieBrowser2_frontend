@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type Website from "@/models/Website";
+import type Website from "@/models/website";
 import WebsiteFormDialog from "../website-form-dialog/WebsiteFormDialog.vue";
 import { useConfirm } from "../use-dialog/confirm/useConfirm";
 import { useSnackbar } from "../use-snackbar/useSnackbar";

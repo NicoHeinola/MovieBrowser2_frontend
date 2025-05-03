@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type Website from "@/models/Website";
+import type Website from "@/models/website";
 import type { VForm } from "vuetify/components";
 import { websiteRules } from "./website.rules";
 import IconsAutocomplete from "../icons-autocomplete/IconsAutocomplete.vue";
