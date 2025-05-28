@@ -10,7 +10,7 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install dependencies
-RUN npm ci --only=production=false
+RUN npm install
 
 # Copy source code
 COPY . .
@@ -33,7 +33,7 @@ RUN echo 'server { \
     \
     # Handle client-side routing \
     location / { \
-        try_files $uri $uri/ /index.html; \
+    try_files $uri $uri/ /index.html; \
     } \
     \
     # Enable gzip compression \
@@ -42,10 +42,10 @@ RUN echo 'server { \
     \
     # Cache static assets \
     location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg)$ { \
-        expires 1y; \
-        add_header Cache-Control "public, immutable"; \
+    expires 1y; \
+    add_header Cache-Control "public, immutable"; \
     } \
-}' > /etc/nginx/conf.d/default.conf
+    }' > /etc/nginx/conf.d/default.conf
 
 # Expose port 80
 EXPOSE 80
