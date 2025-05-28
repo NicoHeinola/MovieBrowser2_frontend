@@ -12,7 +12,7 @@ const links = ref([
   },
   {
     text: "Websites",
-    icon: "mdi-skull-crossbones",
+    icon: "mdi-web",
     route: "/websites",
   },
   {
