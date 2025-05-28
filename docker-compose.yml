@@ -7,6 +7,8 @@ services:
       - "3000:80"
     container_name: moviebrowser-frontend
     restart: unless-stopped
+    env_file:
+      - .env
     environment:
       - NODE_ENV=production
     networks:
