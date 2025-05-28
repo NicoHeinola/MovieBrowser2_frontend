@@ -4,8 +4,8 @@ import type website from "@/models/website";
 import { useSnackbar } from "@/components/use-snackbar/useSnackbar";
 import { useErrorSnackbar } from "@/utils/errorSnackbar";
 import { WebsiteService } from "@/services/website.service";
-import websiteFormDialog from "@/components/website-form-dialog/websiteFormDialog.vue";
-import websiteCard from "@/components/website-card/websiteCard.vue";
+import WebsiteFormDialog from "@/components/website-form-dialog/WebsiteFormDialog.vue";
+import WebsiteCard from "@/components/website-card/WebsiteCard.vue";
 import { useAuthStore } from "@/stores/auth.store";
 
 const websites = ref<website[]>([]);

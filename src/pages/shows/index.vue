@@ -32,12 +32,18 @@ const getShows = async () => {
         search: search.value,
       },
     });
+
+    if (!Array.isArray(data)) {
+      console.error("Expected an array of shows, but received:", data);
+      data = [];
+    }
   } catch (error) {
     errorSnackbar(error, openSnackbar);
 
     shows.value = [];
     return;
   }
+
   shows.value = data;
 
   loadingShows.value = false;

@@ -4,32 +4,13 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "8080:80"
+      - "3000:80"
     container_name: moviebrowser-frontend
     restart: unless-stopped
     environment:
       - NODE_ENV=production
     networks:
       - moviebrowser-network
-
-  # Development service (optional)
-  moviebrowser-dev:
-    build:
-      context: .
-      dockerfile: Dockerfile.dev
-    ports:
-      - "3000:3000"
-    container_name: moviebrowser-dev
-    restart: unless-stopped
-    volumes:
-      - .:/app
-      - /app/node_modules
-    environment:
-      - NODE_ENV=development
-    networks:
-      - moviebrowser-network
-    profiles:
-      - dev
 
 networks:
   moviebrowser-network:
