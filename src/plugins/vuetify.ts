@@ -23,6 +23,9 @@ export default createVuetify({
           secondary: "#00CAFF",
           error: "#FF1744",
           success: "#00C853",
+
+          surface: "#121212",
+          background: "#0A0A0A",
         },
       },
     },
