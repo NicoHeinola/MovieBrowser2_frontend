@@ -37,6 +37,7 @@ const startWatching = async () => {
   }
 
   await ShowService().watchSeason(show.value.id, seasonIdToWatch);
+  userWatchSeasonStore.loadUserWatchSeasons();
 };
 </script>
 

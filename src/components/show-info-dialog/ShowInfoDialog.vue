@@ -8,6 +8,7 @@ import { useErrorSnackbar } from "@/utils/errorSnackbar";
 import type Season from "@/models/season";
 import { EpisodeType, episodeTypeItems } from "@/models/episode";
 import { useAuthStore } from "@/stores/auth.store";
+import { useUserWatchSeasonStore } from "@/stores/userWatchSeason.store";
 
 const show = defineModel("show", {
   default: {
@@ -30,6 +31,7 @@ const open = defineModel("open", {
 const showFormDialogOpen = ref<boolean>(false);
 const openConfirm = useConfirm();
 const openSnackbar = useSnackbar();
+const userWatchSeasonStore = useUserWatchSeasonStore();
 
 const { errorSnackbar } = useErrorSnackbar();
 
@@ -109,11 +111,7 @@ const watchSeason = async () => {
 
   try {
     await ShowService().watchSeason(show.value.id, selectedSeason.value?.id);
-    openSnackbar({
-      props: {
-        text: `Started watching season successfully!.`,
-      },
-    });
+    userWatchSeasonStore.loadUserWatchSeasons();
   } catch (error) {
     errorSnackbar(error, openSnackbar);
   }
