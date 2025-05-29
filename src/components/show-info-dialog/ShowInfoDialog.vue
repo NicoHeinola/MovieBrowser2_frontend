@@ -9,6 +9,7 @@ import type Season from "@/models/season";
 import { EpisodeType, episodeTypeItems } from "@/models/episode";
 import { useAuthStore } from "@/stores/auth.store";
 import { useUserWatchSeasonStore } from "@/stores/userWatchSeason.store";
+import type UserWatchSeason from "@/models/userWatchSeason";
 
 const show = defineModel("show", {
   default: {
@@ -117,6 +118,13 @@ const watchSeason = async () => {
   }
 };
 
+const getSeasonIcon = (season: Season) => {
+  const seasonId = season.id;
+  return userWatchSeasonStore.userWatchSeasons.find((s: UserWatchSeason) => s.season_id === seasonId)
+    ? "mdi-rotate-right"
+    : "";
+};
+
 // Helper to get icon for episode type
 const getEpisodeTypeIcon = (type?: EpisodeType) => {
   return episodeTypeItems.find((item) => item.value === type)?.icon || "";
@@ -165,6 +173,7 @@ const getEpisodeTypeIcon = (type?: EpisodeType) => {
                 :key="season.id"
                 :variant="selectedSeason?.id !== season.id ? 'outlined' : undefined"
                 @click="selectedSeason = season"
+                :prepend-icon="getSeasonIcon(season)"
               >
                 {{ season.title ? `${season.title} (Season ${season.number})` : `Season ${season.number}` }}
               </v-btn>
