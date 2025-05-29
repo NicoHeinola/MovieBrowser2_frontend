@@ -267,6 +267,7 @@ const addMultipleEpisodes = () => {
           /Season\s?\d+\s?-\s?(\d{2,3})/, // e.g. "Season 02 - 04"
           /S\d{2}E(\d{2,3})/i, // e.g. "S01E01"
           / - (\d{2,3})\s?\[/, // e.g. " - 09 ["
+          / (\d{2,3})(?:\D|$)/, // e.g. " 01", " 12"
         ];
 
         for (const pattern of patterns) {
@@ -277,9 +278,9 @@ const addMultipleEpisodes = () => {
           }
         }
 
-        // Fallback: try to find the last number in the filename
+        // Fallback: try to find the first number in the filename
         if (number === undefined) {
-          const fallback = filename.match(/(\d{2,3})(?!.*\d)/);
+          const fallback = filename.match(/(\d{2,3})/);
           if (fallback && fallback[1]) {
             number = parseInt(fallback[1], 10);
           }
