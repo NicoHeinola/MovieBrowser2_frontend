@@ -7,11 +7,14 @@ import { WebsiteService } from "@/services/website.service";
 import WebsiteFormDialog from "@/components/website-form-dialog/WebsiteFormDialog.vue";
 import WebsiteCard from "@/components/website-card/WebsiteCard.vue";
 import { useAuthStore } from "@/stores/auth.store";
+import { useConfirm } from "@/components/use-dialog/confirm/useConfirm";
 
 const websites = ref<website[]>([]);
 const loading = ref(false);
+const seeding = ref(false);
 const openSnackbar = useSnackbar();
 const { errorSnackbar } = useErrorSnackbar();
+const openConfirm = useConfirm();
 
 const newWebsite = ref<website>({});
 
@@ -34,6 +37,27 @@ const resetNew = () => {
   newWebsite.value = {};
 };
 
+const seedWebsites = async () => {
+  const ok = await openConfirm({
+    props: {
+      title: "Seed Websites",
+      text: "Are you sure you want to seed websites? This may overwrite existing websites.",
+    },
+  });
+
+  if (!ok) return;
+
+  seeding.value = true;
+  try {
+    await WebsiteService().seedWebsites();
+    openSnackbar({ props: { text: "Websites seeded successfully" } });
+    await getWebsites();
+  } catch (error) {
+    errorSnackbar(error, openSnackbar);
+  }
+  seeding.value = false;
+};
+
 onMounted(getWebsites);
 
 watch(dialogOpen, (val) => {
@@ -44,8 +68,11 @@ watch(dialogOpen, (val) => {
 <template>
   <v-container class="pa-12">
     <h1 class="text-h4 mb-6">Websites</h1>
-    <v-btn color="primary" prepend-icon="mdi-plus" @click="dialogOpen = true" v-if="auth.isAdmin">Add Website</v-btn>
-    <div class="d-flex flex-wrap justify-start ga-4 mt-6">
+    <div class="d-flex ga-2 mb-6" v-if="auth.isAdmin">
+      <v-btn color="primary" prepend-icon="mdi-plus" @click="dialogOpen = true">Add Website</v-btn>
+      <v-btn color="error" prepend-icon="mdi-seed" @click="seedWebsites" :loading="seeding">Seed Websites</v-btn>
+    </div>
+    <div class="d-flex flex-wrap justify-start ga-4">
       <div v-for="(website, i) in websites" :key="website.id">
         <website-card v-model:website="websites[i]" @delete:website="getWebsites"></website-card>
       </div>

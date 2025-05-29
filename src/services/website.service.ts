@@ -22,5 +22,10 @@ export const WebsiteService = () => {
     return response.data;
   };
 
-  return { getWebsites, createWebsite, updateWebsite, deleteWebsite };
+  const seedWebsites = async () => {
+    const response = await api.post("/websites/seed");
+    return response.data;
+  };
+
+  return { getWebsites, createWebsite, updateWebsite, deleteWebsite, seedWebsites };
 };
