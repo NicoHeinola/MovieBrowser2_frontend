@@ -1,6 +1,9 @@
 <script lang="ts" setup>
 import type Show from "@/models/show";
 import ShowInfoDialog from "../show-info-dialog/ShowInfoDialog.vue";
+import { useUserWatchSeasonStore } from "@/stores/userWatchSeason.store";
+import type UserWatchSeason from "@/models/userWatchSeason";
+import { ShowService } from "@/services/show.service";
 
 const show = defineModel("show", {
   default: {
@@ -16,10 +19,22 @@ const emit = defineEmits<{
   (e: "delete:show", show: Show): void;
 }>();
 
+const userWatchSeasonStore = useUserWatchSeasonStore();
 const infoDialogOpen = ref(false);
 
-const startWatching = () => {
-  console.log("Watch");
+const startWatching = async () => {
+  if (!show.value.id) return;
+
+  const userWatchSeason: UserWatchSeason | undefined = userWatchSeasonStore.findUserWatchSeasonByShowId(show.value.id);
+
+  const seasonIdToWatch: number | undefined = userWatchSeason?.season_id ?? show.value.seasons?.[0]?.id;
+
+  if (!seasonIdToWatch) {
+    console.error("No season available to watch for this show.");
+    return;
+  }
+
+  await ShowService().watchSeason(show.value.id, seasonIdToWatch);
 };
 </script>
 

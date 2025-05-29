@@ -6,6 +6,7 @@ import { useSnackbar } from "@/components/use-snackbar/useSnackbar";
 import type Show from "@/models/show";
 import { ShowService } from "@/services/show.service";
 import { useAuthStore } from "@/stores/auth.store";
+import { useUserWatchSeasonStore } from "@/stores/userWatchSeason.store";
 import { useErrorSnackbar } from "@/utils/errorSnackbar";
 
 const search = ref<string>("");
@@ -16,6 +17,7 @@ const shows = ref<Show[]>([]);
 const loadingShows = ref<boolean>(false);
 
 const auth = useAuthStore();
+const userWatchSeasonStore = useUserWatchSeasonStore();
 
 const showToAdd = ref<Show>({} as Show);
 
@@ -59,6 +61,7 @@ const resetShowToAdd = () => {
 
 onMounted(async () => {
   resetShowToAdd();
+  userWatchSeasonStore.loadUserWatchSeasons();
   await getShows();
 });
 </script>
