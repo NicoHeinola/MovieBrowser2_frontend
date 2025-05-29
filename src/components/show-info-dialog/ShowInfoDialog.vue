@@ -158,11 +158,6 @@ const getEpisodeTypeIcon = (type?: EpisodeType) => {
 
           <v-divider :opacity="0.5"></v-divider>
 
-          <div class="d-flex align-center ga-2">
-            <b>Watch</b>
-            <v-btn variant="text" size="small" append-icon="mdi-play" color="secondary"> Continue </v-btn>
-          </div>
-
           <template v-if="show.seasons?.length">
             <p>Season</p>
 
