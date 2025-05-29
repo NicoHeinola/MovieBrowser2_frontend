@@ -125,47 +125,55 @@ watch(dialogOpen, (val) => {
 
 <template>
   <v-container class="pa-12">
-    <h1 class="text-h4 mb-6">Settings</h1>
-    <div class="d-flex ga-2">
-      <v-btn color="primary" prepend-icon="mdi-plus" @click="dialogOpen = true">Add Setting</v-btn>
-      <v-btn color="error" prepend-icon="mdi-seed" @click="seedSettings" :loading="!!seeding">Seed Settings</v-btn>
-      <v-btn color="error" prepend-icon="mdi-vacuum" @click="cleanupShows" :loading="!!cleaningShowsUp"
-        >Cleanup Shows</v-btn
-      >
-    </div>
-    <v-table class="mt-6" :loading="loading">
-      <thead>
-        <tr>
-          <th>Key</th>
-          <th>Value</th>
-          <th>Type</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="setting in settings" :key="setting.id">
-          <td>{{ setting.key }}</td>
-          <td>{{ setting.value }}</td>
-          <td>{{ setting.type }}</td>
-          <td>
-            <v-btn
-              icon="mdi-pencil"
-              variant="text"
-              color="secondary"
-              @click="editSetting(setting)"
-              :disabled="!!deleting"
-            />
-            <v-btn
-              icon="mdi-delete"
-              variant="text"
-              color="error"
-              @click="deleteSetting(setting.id!)"
-              :disabled="!!deleting"
-            />
-          </td>
-        </tr>
-      </tbody>
-    </v-table>
+    <v-row>
+      <v-col class="d-flex align-center justify-space-between">
+        <h1 class="text-h4">Settings</h1>
+        <div class="d-flex align-center ga-2">
+          <v-btn color="primary" prepend-icon="mdi-plus" @click="dialogOpen = true">Add Setting</v-btn>
+          <v-btn color="error" prepend-icon="mdi-seed" @click="seedSettings" :loading="!!seeding">Seed Settings</v-btn>
+          <v-btn color="error" prepend-icon="mdi-vacuum" @click="cleanupShows" :loading="!!cleaningShowsUp">
+            Cleanup Shows
+          </v-btn>
+        </div>
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col cols="12">
+        <v-table :loading="loading">
+          <thead>
+            <tr>
+              <th>Key</th>
+              <th>Value</th>
+              <th>Type</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="setting in settings" :key="setting.id">
+              <td>{{ setting.key }}</td>
+              <td>{{ setting.value }}</td>
+              <td>{{ setting.type }}</td>
+              <td>
+                <v-btn
+                  icon="mdi-pencil"
+                  variant="text"
+                  color="secondary"
+                  @click="editSetting(setting)"
+                  :disabled="!!deleting"
+                />
+                <v-btn
+                  icon="mdi-delete"
+                  variant="text"
+                  color="error"
+                  @click="deleteSetting(setting.id!)"
+                  :disabled="!!deleting"
+                />
+              </td>
+            </tr>
+          </tbody>
+        </v-table>
+      </v-col>
+    </v-row>
     <setting-form-dialog
       v-model:open="dialogOpen"
       v-model:setting="newSetting"

@@ -8,6 +8,7 @@ import { ShowService } from "@/services/show.service";
 import { useAuthStore } from "@/stores/auth.store";
 import { useUserWatchSeasonStore } from "@/stores/userWatchSeason.store";
 import { useErrorSnackbar } from "@/utils/errorSnackbar";
+import { useDebounceFn } from "@vueuse/core";
 
 const search = ref<string>("");
 
@@ -51,6 +52,15 @@ const getShows = async () => {
   loadingShows.value = false;
 };
 
+const getShowsDebounceFN = useDebounceFn(() => {
+  getShows();
+}, 200);
+
+const getShowsDebounce = (value: string) => {
+  loadingShows.value = true;
+  getShowsDebounceFN();
+};
+
 const resetShowToAdd = () => {
   showToAdd.value = {
     title: "",
@@ -68,7 +78,12 @@ onMounted(async () => {
 
 <template>
   <v-container class="d-flex flex-column ga-6 pa-12">
-    <h1 class="text-h4">Movies</h1>
+    <v-row>
+      <v-col cols="12" class="d-flex justify-space-between align-center">
+        <h1 class="text-h4">Movies</h1>
+        <v-btn prepend-icon="mdi-plus" color="primary" @click="addShowDialogOpen = true" v-if="auth.isAdmin">Add</v-btn>
+      </v-col>
+    </v-row>
     <div class="d-flex flex-column w-100 ga-4">
       <div class="d-flex align-center ga-2">
         <search-filter-input
@@ -82,9 +97,8 @@ onMounted(async () => {
             variant: 'text',
           }"
           class="flex-1-1-100"
-          @click:search="getShows"
+          @update:search="getShowsDebounce"
         ></search-filter-input>
-        <v-btn prepend-icon="mdi-plus" color="primary" @click="addShowDialogOpen = true" v-if="auth.isAdmin">Add</v-btn>
       </div>
     </div>
     <div class="d-flex flex-wrap justify-start ga-4">

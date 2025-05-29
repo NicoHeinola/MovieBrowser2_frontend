@@ -20,7 +20,7 @@ export default createVuetify({
         dark: true,
         colors: {
           primary: "#FFD600",
-          secondary: "#a9e5d5",
+          secondary: "#00CAFF",
           error: "#FF1744",
           success: "#00C853",
         },
