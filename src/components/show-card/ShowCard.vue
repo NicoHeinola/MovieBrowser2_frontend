@@ -5,6 +5,9 @@ import { useUserWatchSeasonStore } from "@/stores/userWatchSeason.store";
 import type UserWatchSeason from "@/models/userWatchSeason";
 import { ShowService } from "@/services/show.service";
 import { useSnackbar } from "../use-snackbar/useSnackbar";
+import { useUserShowStatusStore } from "@/stores/userShowStatus.store";
+import { userShowStatuses } from "@/models/userShowStatus";
+import type UserShowStatus from "@/models/userShowStatus";
 
 const show = defineModel("show", {
   default: {
@@ -23,9 +26,21 @@ const emit = defineEmits<{
 const snackbar = useSnackbar();
 
 const userWatchSeasonStore = useUserWatchSeasonStore();
-const userShowStatusStore = useUserWatchSeasonStore();
+const userShowStatusStore = useUserShowStatusStore();
 
 const infoDialogOpen = ref(false);
+
+const userShowStatus = computed(() => {
+  const status: UserShowStatus | null = userShowStatusStore.findUserShowStatusByShowId(show.value.id) ?? null;
+
+  const notAllowedStatuses = ["unknown"];
+
+  if (notAllowedStatuses.includes(status?.status as string)) {
+    return null;
+  }
+
+  return userShowStatuses.find((s) => s.value === status?.status) || null;
+});
 
 const startWatching = async () => {
   if (!show.value.id) return;
@@ -64,6 +79,9 @@ const startWatching = async () => {
           </p>
         </v-btn>
       </v-img>
+      <div class="d-flex pa-4 position-absolute w-100 h-100" style="pointer-events: none" v-if="userShowStatus">
+        <v-icon size="x-large" :color="userShowStatus.color">{{ userShowStatus.icon }}</v-icon>
+      </div>
       <div class="play-icon d-flex align-center justify-center position-absolute w-100 h-100">
         <v-icon size="50" class="opacity-30">mdi-play-circle-outline</v-icon>
       </div>
