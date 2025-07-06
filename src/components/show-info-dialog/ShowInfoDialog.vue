@@ -141,12 +141,18 @@ watch(
   (newValue: any) => {
     if (!newValue) {
       userShowStatusStore.deleteUserShowStatus(show.value.id);
-      return;
+    } else {
+      userShowStatusStore.createOrUpdateUserShowStatus({
+        show_id: show.value.id,
+        status: newValue,
+      });
     }
 
-    userShowStatusStore.createOrUpdateUserShowStatus({
-      show_id: show.value.id,
-      status: newValue,
+    const statusText = userShowStatuses.find((s) => s.value === newValue)?.text || "Unknown";
+    openSnackbar({
+      props: {
+        text: `Status updated to "${statusText}".`,
+      },
     });
   }
 );
