@@ -4,6 +4,7 @@ import type User from "@/models/user";
 import { AuthService } from "@/services/auth.service";
 import { useStorage } from "@vueuse/core";
 import { useUserWatchSeasonStore } from "./userWatchSeason.store";
+import { useUserShowStatusStore } from "./userShowStatus.store";
 
 export const useAuthStore = defineStore("auth", () => {
   const token = useStorage<string | null>("authToken", null);
@@ -70,6 +71,9 @@ export const useAuthStore = defineStore("auth", () => {
   const logout = async () => {
     const userWatchSeasonStore = useUserWatchSeasonStore();
     userWatchSeasonStore.userWatchSeasons = [];
+
+    const userShowStatusStore = useUserShowStatusStore();
+    userShowStatusStore.userShowStatuses = [];
 
     setToken(null);
     user.value = null;

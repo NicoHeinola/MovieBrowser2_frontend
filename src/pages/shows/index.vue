@@ -6,6 +6,7 @@ import { useSnackbar } from "@/components/use-snackbar/useSnackbar";
 import type Show from "@/models/show";
 import { ShowService } from "@/services/show.service";
 import { useAuthStore } from "@/stores/auth.store";
+import { useUserShowStatusStore } from "@/stores/userShowStatus.store";
 import { useUserWatchSeasonStore } from "@/stores/userWatchSeason.store";
 import { useErrorSnackbar } from "@/utils/errorSnackbar";
 import { useDebounceFn } from "@vueuse/core";
@@ -19,6 +20,7 @@ const loadingShows = ref<boolean>(false);
 
 const auth = useAuthStore();
 const userWatchSeasonStore = useUserWatchSeasonStore();
+const userShowStatusStore = useUserShowStatusStore();
 
 const showToAdd = ref<Show>({} as Show);
 
@@ -72,6 +74,7 @@ const resetShowToAdd = () => {
 onMounted(async () => {
   resetShowToAdd();
   userWatchSeasonStore.loadUserWatchSeasons();
+  userShowStatusStore.loadUserShowStatuses();
   await getShows();
 });
 </script>
