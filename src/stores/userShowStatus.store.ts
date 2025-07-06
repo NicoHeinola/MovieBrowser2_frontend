@@ -33,10 +33,24 @@ export const useUserShowStatusStore = defineStore("usershowstatus", () => {
     }
   };
 
+  const deleteUserShowStatus = async (showId?: number) => {
+    if (!showId) return;
+
+    await UserShowStatusService().deleteUserShowStatus(showId);
+
+    const index = userShowStatuses.value.findIndex((status) => status.show_id === showId);
+    if (!showId || index === -1) {
+      return;
+    }
+
+    userShowStatuses.value.splice(index, 1);
+  };
+
   return {
     userShowStatuses,
     loadUserShowStatuses,
     findUserShowStatusByShowId,
     createOrUpdateUserShowStatus,
+    deleteUserShowStatus,
   };
 });

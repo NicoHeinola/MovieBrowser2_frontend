@@ -139,7 +139,11 @@ const getEpisodeTypeIcon = (type?: EpisodeType) => {
 watch(
   () => status.value,
   (newValue: any) => {
-    console.log("Status changed:", newValue);
+    if (!newValue) {
+      userShowStatusStore.deleteUserShowStatus(show.value.id);
+      return;
+    }
+
     userShowStatusStore.createOrUpdateUserShowStatus({
       show_id: show.value.id,
       status: newValue,
