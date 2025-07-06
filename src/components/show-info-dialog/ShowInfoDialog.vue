@@ -160,31 +160,37 @@ onMounted(() => {
   <v-dialog v-model="open">
     <template #default>
       <v-card>
-        <v-card-title class="bg-primary d-flex align-center ga-4">
-          <span class="text-h6">{{ show.title }}</span>
-          <v-select
-            hide-details
-            label="Status"
-            item-value="value"
-            item-title="text"
-            :items="userShowStatuses"
-            v-model="status"
-          >
-            <template v-slot:item="{ props: itemProps, item }">
-              <v-list-item v-bind="itemProps" :title="''">
-                <v-list-item-title class="d-flex align-center ga-2">
-                  <v-icon>{{ item.raw.icon }}</v-icon>
-                  <p>{{ item.raw.text }}</p>
-                </v-list-item-title>
-              </v-list-item>
-            </template>
-            <template #selection="{ item }">
-              <div class="d-flex align-center ga-2">
-                <v-icon>{{ item.raw.icon }}</v-icon>
-                <p>{{ item.raw.text }}</p>
-              </div>
-            </template>
-          </v-select>
+        <v-card-title class="bg-primary">
+          <v-row class="d-flex align-center">
+            <v-col cols="8">
+              <p class="text-h6 text-truncate">{{ show.title }}</p>
+            </v-col>
+            <v-col cols="4">
+              <v-select
+                hide-details
+                label="Status"
+                item-value="value"
+                item-title="text"
+                :items="userShowStatuses"
+                v-model="status"
+              >
+                <template v-slot:item="{ props: itemProps, item }">
+                  <v-list-item v-bind="itemProps" :title="''">
+                    <v-list-item-title class="d-flex align-center ga-2">
+                      <v-icon>{{ item.raw.icon }}</v-icon>
+                      <p>{{ item.raw.text }}</p>
+                    </v-list-item-title>
+                  </v-list-item>
+                </template>
+                <template #selection="{ item }">
+                  <div class="d-flex align-center ga-2">
+                    <v-icon>{{ item.raw.icon }}</v-icon>
+                    <p>{{ item.raw.text }}</p>
+                  </div>
+                </template>
+              </v-select>
+            </v-col>
+          </v-row>
         </v-card-title>
         <v-card-text class="d-flex flex-column ga-2">
           <div class="d-flex ga-2" v-if="show.description">

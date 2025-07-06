@@ -21,7 +21,10 @@ const emit = defineEmits<{
 }>();
 
 const snackbar = useSnackbar();
+
 const userWatchSeasonStore = useUserWatchSeasonStore();
+const userShowStatusStore = useUserWatchSeasonStore();
+
 const infoDialogOpen = ref(false);
 
 const startWatching = async () => {
