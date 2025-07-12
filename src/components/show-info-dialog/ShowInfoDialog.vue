@@ -32,7 +32,7 @@ const open = defineModel("open", {
   type: Boolean,
 });
 
-const status = ref<string | null>(null);
+const status = ref<string | null>("uninitialized");
 const userShowStatusStore = useUserShowStatusStore();
 
 const showFormDialogOpen = ref<boolean>(false);
@@ -138,7 +138,11 @@ const getEpisodeTypeIcon = (type?: EpisodeType) => {
 
 watch(
   () => status.value,
-  (newValue: any) => {
+  (newValue: any, oldValue: any) => {
+    if (oldValue === "uninitialized") {
+      return;
+    }
+
     if (!newValue) {
       userShowStatusStore.deleteUserShowStatus(show.value.id);
     } else {
