@@ -24,6 +24,13 @@ const imageSearchUrl = computed(() => {
 
   return `https://www.google.com/search?tbm=isch&q=${encodeURIComponent(title)}`;
 });
+
+onMounted(() => {
+  show.value.categories =
+    show.value.categories?.map((c) => {
+      return showCategories.find((category) => category.name === c.name) || c;
+    }) || [];
+});
 </script>
 
 <template>
@@ -47,7 +54,7 @@ const imageSearchUrl = computed(() => {
     v-model="show.categories"
     :items="showCategories"
     item-value="name"
-    item-title="name"
+    item-title="title"
     label="Categories"
     multiple
     chips

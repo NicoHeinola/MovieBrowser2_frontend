@@ -140,7 +140,7 @@ onMounted(async () => {
                   v-model="filters['categories:anyIn']"
                   :items="showCategories"
                   item-value="name"
-                  item-title="name"
+                  item-title="title"
                   label="Any categories in"
                   multiple
                   chips

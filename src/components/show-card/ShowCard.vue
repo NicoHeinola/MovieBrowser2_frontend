@@ -8,6 +8,7 @@ import { useSnackbar } from "../use-snackbar/useSnackbar";
 import { useUserShowStatusStore } from "@/stores/userShowStatus.store";
 import { userShowStatuses } from "@/models/userShowStatus";
 import type UserShowStatus from "@/models/userShowStatus";
+import { showCategories } from "@/models/showCategory";
 
 const show = defineModel("show", {
   default: {
@@ -86,6 +87,22 @@ const startWatching = async () => {
         >
           <v-icon size="x-large" :color="userShowStatus.color">
             {{ userShowStatus.icon }}
+          </v-icon>
+        </div>
+      </div>
+      <div
+        class="d-flex flex-column align-end pa-4 ga-2 position-absolute w-100 h-100"
+        style="pointer-events: none"
+        v-if="show.categories"
+      >
+        <div
+          class="d-flex align-center justify-center"
+          style="border-radius: 50%; aspect-ratio: 1; height: 25px; background: rgb(0, 0, 0, 0.3)"
+          v-for="category in show.categories.slice(0, 5)"
+          :key="category.name"
+        >
+          <v-icon size="medium">
+            {{ showCategories.find((c) => c.name === category.name)?.icon || "mdi-help" }}
           </v-icon>
         </div>
       </div>
