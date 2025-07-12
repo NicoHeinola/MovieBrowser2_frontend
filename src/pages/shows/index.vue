@@ -3,7 +3,9 @@ import SearchFilterInput from "@/components/search-filter-input/SearchFilterInpu
 import ShowCard from "@/components/show-card/ShowCard.vue";
 import ShowFormDialog from "@/components/show-form-dialog/ShowFormDialog.vue";
 import { useSnackbar } from "@/components/use-snackbar/useSnackbar";
+import UserShowStatusSelect from "@/components/user-show-status-select/UserShowStatusSelect.vue";
 import type Show from "@/models/show";
+import { userShowStatuses } from "@/models/userShowStatus";
 import { ShowService } from "@/services/show.service";
 import { useAuthStore } from "@/stores/auth.store";
 import { useUserShowStatusStore } from "@/stores/userShowStatus.store";
@@ -12,6 +14,7 @@ import { useErrorSnackbar } from "@/utils/errorSnackbar";
 import { useDebounceFn } from "@vueuse/core";
 
 const search = ref<string>("");
+const filters = ref<Record<string, unknown>>({});
 
 const addShowDialogOpen = ref<boolean>(false);
 
@@ -35,6 +38,7 @@ const getShows = async () => {
     data = await ShowService().getShows({
       search: {
         search: search.value,
+        ...filters.value,
       },
     });
 
@@ -101,7 +105,37 @@ onMounted(async () => {
           }"
           class="flex-1-1-100"
           @update:search="getShowsDebounce"
-        ></search-filter-input>
+          @clear:filters="filters = {}"
+        >
+          <template #filters>
+            <v-row>
+              <v-col cols="12">
+                <user-show-status-select
+                  v-model="filters['userShowStatus:in']"
+                  :items="userShowStatuses"
+                  label="Status in"
+                  hide-details
+                  variant="outlined"
+                  multiple
+                  clearable
+                  @update:model-value="getShowsDebounce"
+                ></user-show-status-select>
+              </v-col>
+              <v-col cols="12">
+                <user-show-status-select
+                  v-model="filters['userShowStatus:notIn']"
+                  :items="userShowStatuses"
+                  label="Status not in"
+                  hide-details
+                  variant="outlined"
+                  multiple
+                  clearable
+                  @update:model-value="getShowsDebounce"
+                ></user-show-status-select>
+              </v-col>
+            </v-row>
+          </template>
+        </search-filter-input>
       </div>
     </div>
     <div class="d-flex flex-wrap justify-start ga-4">

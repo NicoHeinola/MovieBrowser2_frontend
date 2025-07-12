@@ -25,22 +25,15 @@ const auth = useAuthStore();
 
 const filters = ref<Record<string, any>>({});
 
-const allWebsiteTags = computed(() => {
-  const tagsSet = new Set<string>();
-  websites.value.forEach((website) => {
-    if (website.tags && Array.isArray(website.tags)) {
-      website.tags.forEach((tag: WebsiteTag) => tagsSet.add(tag.name || ""));
-    }
-  });
-  return Array.from(tagsSet).sort();
-});
+const websiteTags = ref<WebsiteTag[]>([]);
 
 const getWebsites = async () => {
   loading.value = true;
   try {
     websites.value = await WebsiteService().getWebsites({
-      ...(filters.value.tags ? { tags: filters.value.tags.join(",") } : {}),
-      ...(filters.value.title ? { title: filters.value.title } : {}),
+      search: {
+        ...filters.value,
+      },
     });
   } catch (error) {
     errorSnackbar(error, openSnackbar);
@@ -91,6 +84,21 @@ watch(dialogOpen, (val) => {
   if (!val) resetNew();
 });
 
+watch(
+  () => websites.value,
+  (newWebsites) => {
+    for (const website of newWebsites) {
+      if (!website.tags) continue;
+      for (const tag of website.tags) {
+        if (!websiteTags.value.some((t) => t.name === tag.name)) {
+          websiteTags.value.push(tag);
+        }
+      }
+    }
+  },
+  { immediate: true, deep: true }
+);
+
 watch(() => filters.value, getWebsitesDebounce, { deep: true });
 </script>
 
@@ -126,7 +134,7 @@ watch(() => filters.value, getWebsitesDebounce, { deep: true });
               <v-col cols="12">
                 <v-select
                   v-model="filters.tags"
-                  :items="allWebsiteTags"
+                  :items="websiteTags.map((tag) => tag.name)"
                   multiple
                   chips
                   clearable

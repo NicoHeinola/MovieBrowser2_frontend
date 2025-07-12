@@ -34,7 +34,7 @@ const filtersOpen = defineModel<boolean>("filtersOpen", {
       prepend-icon="mdi-filter"
       @click="() => (filtersOpen = true)"
       v-bind="filterButtonProps"
-      v-if="filterButtonProps"
+      v-if="filterButtonProps || $slots.filters"
     ></v-btn>
     <v-btn
       text="Clear"
@@ -47,7 +47,7 @@ const filtersOpen = defineModel<boolean>("filtersOpen", {
         }
       "
       v-bind="clearFiltersButtonProps"
-      v-if="clearFiltersButtonProps || filterButtonProps"
+      v-if="clearFiltersButtonProps || filterButtonProps || $slots.filters"
     ></v-btn>
   </div>
   <v-navigation-drawer
@@ -57,7 +57,7 @@ const filtersOpen = defineModel<boolean>("filtersOpen", {
     :permanent="false"
     :temporary="true"
     :width="350"
-    v-if="filterButtonProps"
+    v-if="filterButtonProps || $slots.filters"
   >
     <v-container>
       <v-row>

@@ -13,6 +13,7 @@ import type UserWatchSeason from "@/models/userWatchSeason";
 import { VCardTitle } from "vuetify/components";
 import { userShowStatuses } from "@/models/userShowStatus";
 import { useUserShowStatusStore } from "@/stores/userShowStatus.store";
+import UserShowStatusSelect from "../user-show-status-select/UserShowStatusSelect.vue";
 
 const show = defineModel("show", {
   default: {
@@ -176,7 +177,7 @@ onMounted(() => {
               <p class="text-h6 text-truncate">{{ show.title }}</p>
             </v-col>
             <v-col cols="4">
-              <v-select
+              <user-show-status-select
                 hide-details
                 label="Status"
                 item-value="value"
@@ -184,21 +185,7 @@ onMounted(() => {
                 :items="userShowStatuses"
                 v-model="status"
               >
-                <template v-slot:item="{ props: itemProps, item }">
-                  <v-list-item v-bind="itemProps" :title="''">
-                    <v-list-item-title class="d-flex align-center ga-2">
-                      <v-icon>{{ item.raw.icon }}</v-icon>
-                      <p>{{ item.raw.text }}</p>
-                    </v-list-item-title>
-                  </v-list-item>
-                </template>
-                <template #selection="{ item }">
-                  <div class="d-flex align-center ga-2">
-                    <v-icon>{{ item.raw.icon }}</v-icon>
-                    <p>{{ item.raw.text }}</p>
-                  </div>
-                </template>
-              </v-select>
+              </user-show-status-select>
             </v-col>
           </v-row>
         </v-card-title>

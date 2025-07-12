@@ -29,6 +29,7 @@ declare module 'vue' {
     ShowFormDialog: typeof import('./components/show-form-dialog/ShowFormDialog.vue')['default']
     ShowInfoDialog: typeof import('./components/show-info-dialog/ShowInfoDialog.vue')['default']
     SnackbarProvider: typeof import('./components/use-snackbar/SnackbarProvider.vue')['default']
+    UserShowStatusSelect: typeof import('./components/user-show-status-select/UserShowStatusSelect.vue')['default']
     WebsiteCard: typeof import('./components/website-card/WebsiteCard.vue')['default']
     WebsiteForm: typeof import('./components/website-form/WebsiteForm.vue')['default']
     WebsiteFormDialog: typeof import('./components/website-form-dialog/WebsiteFormDialog.vue')['default']
