@@ -25,6 +25,12 @@ const imageSearchUrl = computed(() => {
   return `https://www.google.com/search?tbm=isch&q=${encodeURIComponent(title)}`;
 });
 
+const descriptionSearchUrl = computed(() => {
+  const title = `simplified description for ${show.value.title} anime show`;
+
+  return `https://www.google.com/search?q=${encodeURIComponent(title)}`;
+});
+
 onMounted(() => {
   show.value.categories =
     show.value.categories?.map((c) => {
@@ -35,7 +41,18 @@ onMounted(() => {
 
 <template>
   <v-text-field label="Title*" v-model="show.title" :rules="showRules.title"></v-text-field>
-  <v-textarea label="Description" v-model="show.description" :rules="showRules.description"></v-textarea>
+  <v-textarea label="Description" v-model="show.description" :rules="showRules.description"> </v-textarea>
+  <v-btn
+    class="mb-5 w-100"
+    color="primary"
+    prepend-icon="mdi-google"
+    append-icon="mdi-arrow-right"
+    :href="descriptionSearchUrl"
+    target="_blank"
+    :disabled="!show.title"
+  >
+    Description Search
+  </v-btn>
   <v-text-field label="Image (url)" v-model="show.image" :rules="showRules.image">
     <template #append>
       <v-btn
