@@ -62,5 +62,10 @@ export default createVuetify({
       color: "secondary",
       density: "compact",
     },
+    VAutocomplete: {
+      variant: "outlined",
+      color: "secondary",
+      density: "compact",
+    },
   },
 });

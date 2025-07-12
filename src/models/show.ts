@@ -1,4 +1,5 @@
 import type Season from "./season";
+import type ShowCategory from "./showCategory";
 
 export default interface Show {
   id?: number;
@@ -7,4 +8,5 @@ export default interface Show {
   image?: string;
 
   seasons?: Season[];
+  categories?: ShowCategory[];
 }

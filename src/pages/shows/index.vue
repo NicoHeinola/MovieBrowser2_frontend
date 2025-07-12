@@ -2,9 +2,11 @@
 import SearchFilterInput from "@/components/search-filter-input/SearchFilterInput.vue";
 import ShowCard from "@/components/show-card/ShowCard.vue";
 import ShowFormDialog from "@/components/show-form-dialog/ShowFormDialog.vue";
+import ShowCategoriesAutocomplete from "@/components/show-categories-autocomplete/ShowCategoriesAutocomplete.vue";
 import { useSnackbar } from "@/components/use-snackbar/useSnackbar";
 import UserShowStatusSelect from "@/components/user-show-status-select/UserShowStatusSelect.vue";
 import type Show from "@/models/show";
+import { showCategories } from "@/models/showCategory";
 import { userShowStatuses } from "@/models/userShowStatus";
 import { ShowService } from "@/services/show.service";
 import { useAuthStore } from "@/stores/auth.store";
@@ -62,7 +64,7 @@ const getShowsDebounceFN = useDebounceFn(() => {
   getShows();
 }, 200);
 
-const getShowsDebounce = (value: string) => {
+const getShowsDebounce = () => {
   loadingShows.value = true;
   getShowsDebounceFN();
 };
@@ -113,7 +115,7 @@ onMounted(async () => {
                 <user-show-status-select
                   v-model="filters['userShowStatus:in']"
                   :items="userShowStatuses"
-                  label="Status in"
+                  label="Any status in"
                   hide-details
                   variant="outlined"
                   multiple
@@ -132,6 +134,19 @@ onMounted(async () => {
                   clearable
                   @update:model-value="getShowsDebounce"
                 ></user-show-status-select>
+              </v-col>
+              <v-col cols="12">
+                <show-categories-autocomplete
+                  v-model="filters['categories:anyIn']"
+                  :items="showCategories"
+                  item-value="name"
+                  item-title="name"
+                  label="Any categories in"
+                  multiple
+                  chips
+                  clearable
+                  @update:model-value="getShowsDebounce"
+                ></show-categories-autocomplete>
               </v-col>
             </v-row>
           </template>

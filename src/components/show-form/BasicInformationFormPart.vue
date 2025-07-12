@@ -2,6 +2,8 @@
 import type Show from "@/models/show";
 import { rules } from "./show.rules";
 import type { VForm } from "vuetify/components";
+import { showCategories } from "@/models/showCategory";
+import ShowCategoriesAutocomplete from "@/components/show-categories-autocomplete/ShowCategoriesAutocomplete.vue";
 
 const props = defineProps<{}>();
 
@@ -10,6 +12,7 @@ const show = defineModel("show", {
     title: "",
     description: "",
     image: "",
+    categories: [],
   } as Show,
   type: Object as () => Show,
 });
@@ -40,4 +43,15 @@ const imageSearchUrl = computed(() => {
       </v-btn>
     </template>
   </v-text-field>
+  <show-categories-autocomplete
+    v-model="show.categories"
+    :items="showCategories"
+    item-value="name"
+    item-title="name"
+    label="Categories"
+    multiple
+    chips
+    clearable
+    return-object
+  ></show-categories-autocomplete>
 </template>
