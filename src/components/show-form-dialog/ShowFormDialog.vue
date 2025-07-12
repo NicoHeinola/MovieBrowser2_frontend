@@ -65,11 +65,28 @@ const save = async () => {
     return;
   }
 
-  // Attach files to the episodes
+  // Attach files to the episodes (only newly added ones)
   const seasons = createdShow.seasons || [];
-  let uploadPromises: Promise<any>[] = [];
+  let totalEpisodes = 0;
+  let processedEpisodes = 0;
+
+  // Count total episodes that have files (newly added)
   for (const season of seasons) {
     const episodes = season.episodes || [];
+    for (const episode of episodes) {
+      const file = show.value.seasons
+        ?.find((s) => s.number === season.number)
+        ?.episodes?.find((e) => e.number === episode.number)?.file;
+
+      if (file) {
+        totalEpisodes++;
+      }
+    }
+  }
+
+  for (const season of seasons) {
+    const episodes = season.episodes || [];
+
     for (const episode of episodes) {
       const file = show.value.seasons
         ?.find((s) => s.number === season.number)
@@ -79,31 +96,31 @@ const save = async () => {
         continue;
       }
 
-      const promise = ShowService()
-        .uploadEpisodeFile(createdShow.id, episode.id, file)
-        .then((v: any) => {
-          openSnackbar({
-            props: {
-              text: `Successfully uploaded a file: ${episode.title} (${episode.number})`,
-            },
-          });
-          return v;
-        });
-      uploadPromises.push(promise);
-    }
+      try {
+        await ShowService().uploadEpisodeFile(createdShow.id, episode.id, file);
+        processedEpisodes++;
 
-    try {
-      await Promise.all(uploadPromises);
-      openSnackbar({
-        props: {
-          text: `All episode files uploaded successfully.`,
-        },
-      });
-    } catch (error) {
-      errorSnackbar(error, openSnackbar);
-      saving.value = false;
-      return;
+        const remainingEpisodes = totalEpisodes - processedEpisodes;
+
+        openSnackbar({
+          props: {
+            text: `Successfully uploaded: ${episode.title} (${episode.number}). ${remainingEpisodes} episodes left.`,
+          },
+        });
+      } catch (error) {
+        errorSnackbar(error, openSnackbar);
+        saving.value = false;
+        return;
+      }
     }
+  }
+
+  if (totalEpisodes > 0) {
+    openSnackbar({
+      props: {
+        text: `All episode files uploaded successfully.`,
+      },
+    });
   }
 
   saving.value = false;
