@@ -80,7 +80,14 @@ const startWatching = async () => {
         </v-btn>
       </v-img>
       <div class="d-flex pa-4 position-absolute w-100 h-100" style="pointer-events: none" v-if="userShowStatus">
-        <v-icon size="x-large" :color="userShowStatus.color">{{ userShowStatus.icon }}</v-icon>
+        <div
+          class="d-flex align-center justify-center"
+          style="border-radius: 50%; aspect-ratio: 1; height: 40px; background: rgb(0, 0, 0, 0.6)"
+        >
+          <v-icon size="x-large" :color="userShowStatus.color">
+            {{ userShowStatus.icon }}
+          </v-icon>
+        </div>
       </div>
       <div class="play-icon d-flex align-center justify-center position-absolute w-100 h-100">
         <v-icon size="50" class="opacity-30">mdi-play-circle-outline</v-icon>
