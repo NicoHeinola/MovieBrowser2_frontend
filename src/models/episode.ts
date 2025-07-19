@@ -25,4 +25,5 @@ export default interface Episode {
   type?: EpisodeType;
   file?: any;
   filename?: string;
+  file_size_bytes?: number;
 }

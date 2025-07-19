@@ -5,6 +5,8 @@ import { ShowService } from "@/services/show.service";
 import { useConfirm } from "../use-dialog/confirm/useConfirm";
 import { useSnackbar } from "../use-snackbar/useSnackbar";
 import { useErrorSnackbar } from "@/utils/errorSnackbar";
+import { calculateTotalSizeOfShow } from "@/utils/showUtils";
+import { formatBytes } from "@/utils/fileSize";
 import type Season from "@/models/season";
 import { EpisodeType, episodeTypeItems } from "@/models/episode";
 import { useAuthStore } from "@/stores/auth.store";
@@ -213,6 +215,13 @@ onMounted(() => {
             <v-icon>mdi-television-play</v-icon>
             <span>
               Episodes: {{ show.seasons?.reduce((acc, season) => acc + (season.episodes?.length ?? 0), 0) ?? 0 }}
+            </span>
+          </div>
+
+          <div class="d-flex ga-2">
+            <v-icon>mdi-file</v-icon>
+            <span>
+              {{ formatBytes(calculateTotalSizeOfShow(show)) }}
             </span>
           </div>
 
