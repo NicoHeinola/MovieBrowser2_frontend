@@ -23,6 +23,13 @@ const filters = ref<Record<string, unknown>>({
 const addShowDialogOpen = ref<boolean>(false);
 
 const shows = ref<Show[]>([]);
+
+const defaultPagination = {
+  page: 1,
+  pages: 0,
+  limit: 30,
+};
+const pagination = ref({ ...defaultPagination });
 const loadingShows = ref<boolean>(false);
 
 const auth = useAuthStore();
@@ -34,30 +41,48 @@ const showToAdd = ref<Show>({} as Show);
 const openSnackbar = useSnackbar();
 const { errorSnackbar } = useErrorSnackbar();
 
-const getShows = async () => {
+const getShows = async (loadMore: boolean = false) => {
   loadingShows.value = true;
 
-  let data: any;
+  if (!loadMore) {
+    pagination.value = {
+      ...defaultPagination,
+    };
+  }
+
+  let response: any;
   try {
-    data = await ShowService().getShows({
+    response = await ShowService().getShows({
       search: {
         search: search.value,
+        page: pagination.value.page,
+        limit: pagination.value.limit,
         ...filters.value,
       },
     });
 
-    if (!Array.isArray(data)) {
-      console.error("Expected an array of shows, but received:", data);
-      data = [];
+    if (!Array.isArray(response.data)) {
+      console.error("Expected an array of shows, but received:", response.data);
+      response.data = [];
     }
   } catch (error) {
     errorSnackbar(error, openSnackbar);
 
     shows.value = [];
+    pagination.value = {
+      ...defaultPagination,
+    };
     return;
   }
 
-  shows.value = data;
+  if (!loadMore) {
+    shows.value = response.data;
+  } else {
+    shows.value.push(...response.data);
+  }
+
+  pagination.value = response?.pagination;
+  pagination.value.page += 1;
 
   loadingShows.value = false;
 };
@@ -161,8 +186,11 @@ onMounted(async () => {
     </div>
     <div class="d-flex flex-wrap justify-start ga-4">
       <div v-for="(show, i) in shows" :key="show.id">
-        <show-card v-model:show="shows[i]" @update:show="getShows" @delete:show="getShows"></show-card>
+        <show-card v-model:show="shows[i]" @update:show="getShows()" @delete:show="getShows()"></show-card>
       </div>
+    </div>
+    <div class="d-flex justify-center align-center" v-if="pagination.page <= pagination.pages">
+      <v-btn :disabled="loadingShows" @click="getShows(true)">Load more shows</v-btn>
     </div>
   </v-container>
   <show-form-dialog
