@@ -4,7 +4,7 @@ export const userShowStatuses = [
   { value: "dropped", text: "Dropped", icon: "mdi-close", color: "red" },
   { value: "on_hold", text: "On Hold", icon: "mdi-pause", color: "yellow" },
   { value: "completed", text: "Completed", icon: "mdi-check", color: "green" },
-  { value: null, text: "Unknown", icon: "mdi-help-circle", color: "grey" },
+  { value: "", text: "Unknown", icon: "mdi-help-circle", color: "grey" },
 ];
 
 export default interface UserShowStatus {

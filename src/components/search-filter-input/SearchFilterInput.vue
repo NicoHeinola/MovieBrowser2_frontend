@@ -1,10 +1,16 @@
 <script lang="ts" setup>
-defineProps<{
-  textFieldProps: Record<string, unknown>;
-  searchButtonProps?: Record<string, unknown>;
-  filterButtonProps?: Record<string, unknown>;
-  clearFiltersButtonProps?: Record<string, unknown>;
-}>();
+withDefaults(
+  defineProps<{
+    textFieldProps: Record<string, unknown>;
+    searchButtonProps?: Record<string, unknown>;
+    filterButtonProps?: Record<string, unknown>;
+    clearFiltersButtonProps?: Record<string, unknown>;
+    filterCount?: number;
+  }>(),
+  {
+    filterCount: 0,
+  }
+);
 
 const emit = defineEmits<{
   (e: "click:search"): void;
@@ -29,15 +35,17 @@ const filtersOpen = defineModel<boolean>("filtersOpen", {
         <v-btn v-bind="searchButtonProps" size="small" color="secondary" @click="emit('click:search')"></v-btn>
       </template>
     </v-text-field>
+    <v-badge size="x-small" :content="filterCount">
+      <v-btn
+        prepend-icon="mdi-filter"
+        @click="() => (filtersOpen = true)"
+        v-bind="filterButtonProps"
+        v-if="filterButtonProps || $slots.filters"
+      >
+        Filters
+      </v-btn>
+    </v-badge>
     <v-btn
-      text="Filters"
-      prepend-icon="mdi-filter"
-      @click="() => (filtersOpen = true)"
-      v-bind="filterButtonProps"
-      v-if="filterButtonProps || $slots.filters"
-    ></v-btn>
-    <v-btn
-      text="Clear"
       prepend-icon="mdi-close"
       color="error"
       @click="
@@ -48,7 +56,9 @@ const filtersOpen = defineModel<boolean>("filtersOpen", {
       "
       v-bind="clearFiltersButtonProps"
       v-if="clearFiltersButtonProps || filterButtonProps || $slots.filters"
-    ></v-btn>
+    >
+      Clear
+    </v-btn>
   </div>
   <v-navigation-drawer
     v-model="filtersOpen"

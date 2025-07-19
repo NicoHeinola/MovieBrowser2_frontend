@@ -16,7 +16,9 @@ import { useErrorSnackbar } from "@/utils/errorSnackbar";
 import { useDebounceFn } from "@vueuse/core";
 
 const search = ref<string>("");
-const filters = ref<Record<string, unknown>>({});
+const filters = ref<Record<string, unknown>>({
+  "userShowStatus:notIn": ["completed"],
+});
 
 const addShowDialogOpen = ref<boolean>(false);
 
@@ -106,8 +108,9 @@ onMounted(async () => {
             variant: 'text',
           }"
           class="flex-1-1-100"
+          :filter-count="Object.keys(filters).length"
           @update:search="getShowsDebounce"
-          @clear:filters="filters = {}"
+          @clear:filters="(filters = {}), getShows()"
         >
           <template #filters>
             <v-row>
@@ -121,6 +124,7 @@ onMounted(async () => {
                   multiple
                   clearable
                   @update:model-value="getShowsDebounce"
+                  @click:clear="() => delete filters['userShowStatus:in']"
                 ></user-show-status-select>
               </v-col>
               <v-col cols="12">
@@ -133,6 +137,7 @@ onMounted(async () => {
                   multiple
                   clearable
                   @update:model-value="getShowsDebounce"
+                  @click:clear="() => delete filters['userShowStatus:notIn']"
                 ></user-show-status-select>
               </v-col>
               <v-col cols="12">
@@ -146,6 +151,7 @@ onMounted(async () => {
                   chips
                   clearable
                   @update:model-value="getShowsDebounce"
+                  @click:clear="() => delete filters['categories:anyIn']"
                 ></show-categories-autocomplete>
               </v-col>
             </v-row>

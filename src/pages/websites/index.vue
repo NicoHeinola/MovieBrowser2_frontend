@@ -127,7 +127,8 @@ watch(() => filters.value, getWebsitesDebounce, { deep: true });
             variant: 'text',
           }"
           :filter-button-props="{}"
-          @clear:filters="filters = {}"
+          :filter-count="Object.keys(filters).length"
+          @clear:filters="(filters = {}), getWebsites()"
         >
           <template #filters>
             <v-row>
@@ -142,6 +143,7 @@ watch(() => filters.value, getWebsitesDebounce, { deep: true });
                   item-value="name"
                   label="Select Tags"
                   hide-details
+                  @click:clear="() => delete filters.tags"
                 />
               </v-col>
             </v-row>
