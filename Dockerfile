@@ -6,17 +6,20 @@ FROM node:20-alpine AS build
 # Set working directory
 WORKDIR /app
 
-# Copy package files
-COPY package*.json ./
+# Copy necessary files
+COPY package*.json .
+COPY .env .
+COPY index.html .
+COPY src ./src
+COPY public ./public
+COPY tsconfig*.* .
+COPY vite.config.* .
 
 # Install dependencies
 RUN npm install
 
-# Copy source code
-COPY . .
-
 # Build the application
-RUN npm run build
+RUN npm run build-only
 
 # Production stage
 FROM nginx:alpine AS production
