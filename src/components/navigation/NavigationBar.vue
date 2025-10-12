@@ -9,11 +9,13 @@ const links = ref([
     text: "Movies",
     icon: "mdi-movie-search",
     route: "/shows",
+    authenticated: true,
   },
   {
     text: "Websites",
     icon: "mdi-web",
     route: "/websites",
+    authenticated: true,
   },
   {
     text: "Settings",
@@ -57,6 +59,18 @@ const login = () => {
 const register = () => {
   router.push("/auth/register");
 };
+
+const canViewLink = (link: any) => {
+  if (link.admin_only && !authStore.isAdmin) {
+    return false;
+  }
+
+  if (link.authenticated && !authStore.isAuthenticated) {
+    return false;
+  }
+
+  return true;
+};
 </script>
 
 <template>
@@ -69,7 +83,7 @@ const register = () => {
           :class="{ 'active-link': selectedLink === link.route }"
           :to="link.route"
           :color="getLinkColor(link.route)"
-          v-if="!link.admin_only || (link.admin_only && authStore.isAdmin)"
+          v-if="canViewLink(link)"
         >
           <template v-slot:prepend>
             <v-icon :icon="link.icon"></v-icon>

@@ -8,10 +8,36 @@
 import { createRouter, createWebHistory } from "vue-router/auto";
 import { setupLayouts } from "virtual:generated-layouts";
 import { routes } from "vue-router/auto-routes";
+import { useAuthStore } from "@/stores/auth.store";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  routes: [{ path: "/", redirect: "/shows" }, ...setupLayouts(routes)],
+  routes: [
+    {
+      path: "/",
+      redirect: "/shows",
+    },
+    ...setupLayouts(routes),
+  ],
+});
+
+// Navigation guard for authentication
+router.beforeEach((to, from, next) => {
+  const authStore = useAuthStore();
+
+  // Allow access to login page
+  if (to.path === "/auth/login") {
+    next();
+    return;
+  }
+
+  // Redirect to login if not authenticated
+  if (!authStore.isAuthenticated) {
+    next("/auth/login");
+    return;
+  }
+
+  next();
 });
 
 // Workaround for https://github.com/vitejs/vite/issues/11804
