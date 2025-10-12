@@ -9,6 +9,7 @@ import { useUserShowStatusStore } from "@/stores/userShowStatus.store";
 import { userShowStatuses } from "@/models/userShowStatus";
 import type UserShowStatus from "@/models/userShowStatus";
 import { showCategories } from "@/models/showCategory";
+import { useErrorSnackbar } from "@/utils/errorSnackbar";
 
 const show = defineModel("show", {
   default: {
@@ -25,6 +26,7 @@ const emit = defineEmits<{
 }>();
 
 const snackbar = useSnackbar();
+const { errorSnackbar } = useErrorSnackbar();
 
 const userWatchSeasonStore = useUserWatchSeasonStore();
 const userShowStatusStore = useUserShowStatusStore();
@@ -55,7 +57,13 @@ const startWatching = async () => {
     return;
   }
 
-  await ShowService().watchSeason(show.value.id, seasonIdToWatch);
+  try {
+    await ShowService().watchSeason(show.value.id, seasonIdToWatch);
+  } catch (error) {
+    errorSnackbar(error, snackbar);
+    return;
+  }
+
   userWatchSeasonStore.loadUserWatchSeasons();
 };
 </script>

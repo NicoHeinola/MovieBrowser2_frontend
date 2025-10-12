@@ -14,6 +14,8 @@ export const useErrorSnackbar = () => {
 
     const status = error?.response?.status;
 
+    const details = error?.response?.data?.detail;
+
     if (status === 401) {
       openSnackbar({
         props: {
@@ -38,7 +40,9 @@ export const useErrorSnackbar = () => {
     } else if (status === 500) {
       openSnackbar({
         props: {
-          text: "Internal server error.",
+          text:
+            "Internal server error. Details: " +
+            (details ? JSON.stringify(details) : "No additional details provided."),
           color: "error",
         },
       });
