@@ -17,7 +17,7 @@ import { useDebounceFn } from "@vueuse/core";
 
 const search = ref<string>("");
 const filters = ref<Record<string, unknown>>({
-  "userShowStatus:notIn": ["completed"],
+  "userShowStatus:notIn": ["completed", "dropped", "on_hold"],
 });
 
 const addShowDialogOpen = ref<boolean>(false);
@@ -135,7 +135,7 @@ onMounted(async () => {
           class="flex-1-1-100"
           :filter-count="Object.keys(filters).length"
           @update:search="getShowsDebounce"
-          @clear:filters="(filters = {}), getShows()"
+          @clear:filters="((filters = {}), getShows())"
         >
           <template #filters>
             <v-row>
